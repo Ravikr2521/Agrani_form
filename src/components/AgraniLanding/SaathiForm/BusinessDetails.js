@@ -190,14 +190,14 @@ const BusinessDetails = () => {
               <div className="col-lg-12 form-group mb-4">
                   <label className="f_p text_c f_400">Experience in : </label>
 
-                  <div className="col-lg-6 form-check text_box ">
+                  <div className="col-lg-7 form-check text_box d-flex justify-content-between align-items-center ">
                     <div className="form-check ">
                       <input
                         {...register("experience_in_insurance")}
-                        className="form-check-input"
+                        className="form-check-input mt-2"
                         type="checkbox"
                         name="experience_in_insurance"
-                        id="ExperienceinInsurance"
+                        id="ExperienceinInsurance "
                       />
                       <label className="form-check-label" htmlFor="Yes">
                         Insurance
@@ -208,7 +208,7 @@ const BusinessDetails = () => {
                     <div className="form-check">
                       <input
                         {...register("experience_in_banking")}
-                        className="form-check-input"
+                        className="form-check-input mt-2"
                         type="checkbox"
                         name='experience_in_banking'
                       />
@@ -221,7 +221,7 @@ const BusinessDetails = () => {
                     <div className="form-check">
                       <input
                         {...register("experience_in_agrani_input")}
-                        className="form-check-input"
+                        className="form-check-input mt-2"
                         type="checkbox"
                         name="experience_in_agrani_input"
                       />
@@ -235,7 +235,7 @@ const BusinessDetails = () => {
                     <div className="form-check">
                       <input
                         {...register("experience_in_agrani_output")}
-                        className="form-check-input"
+                        className="form-check-input mt-2"
                         type="checkbox"
                         name="experience_in_agrani_output"
 

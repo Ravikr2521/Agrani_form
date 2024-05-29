@@ -444,7 +444,7 @@ const KycDetails = (data) => {
                   </div>
                 </div>
 
-                <div className="col-lg-6 form-group text_box">
+                <div className="col-lg-6  text_box">
                   <div className="mb-3">
                     <label className="f_p text_c f_400 m-0 mb-1">
                       Select Marital Status{" "}
@@ -461,10 +461,8 @@ const KycDetails = (data) => {
                         handleMaritalStatus(MaritalStatus.value);
                       }}
                       options={MaritalStatusList}
-
                       placeholder={userDetails?.personal_details?.martialStatus || "Select Status"}
-
-                      // classNamePrefix="select2-selection"
+                      className=""
                       styles={customStyles}
                     />
                   </div>

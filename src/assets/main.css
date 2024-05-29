@@ -11598,7 +11598,7 @@ button:focus {
   font: 300 15px/60px "Poppins", sans-serif;
   color: #9ca3b9;
   width: 100%;
-  height: 55px;
+  /* height: 55px; */
   padding-left: 30px;
   border: 1px solid #fff;
 }
@@ -12706,7 +12706,6 @@ button:focus {
   -webkit-box-shadow: 0px 2px 4px 0px rgba(12, 0, 46, 0.04);
   box-shadow: 0px 2px 4px 0px rgba(12, 0, 46, 0.04);
   border: 1px solid transparent;
-  height: 55px;
   padding: 0px 30px;
 }
 
@@ -13041,7 +13040,7 @@ button:focus {
   box-shadow: 0px 4px 22px 0px rgba(12, 0, 46, 0.06);
   border: 1px solid transparent;
   border-radius: 45px;
-  height: 55px;
+  /* height: 55px; */
   padding: 0px 30px;
   color: #677294;
   font-size: 15px;
@@ -14328,7 +14327,7 @@ p span {
   border-radius: 0px;
   border: 0px;
   padding-left: 30px;
-  height: 55px;
+  /* height: 55px; */
   z-index: 0;
   border: 1px solid transparent;
 }
@@ -15919,7 +15918,7 @@ p span {
 }
 
 .car_get_quote_content .get_quote_form .form-group .form-control {
-  height: 55px;
+  /* height: 55px; */
   border: 1px solid #ebebf7;
   border-radius: 4px;
   background: transparent;
@@ -16258,7 +16257,7 @@ p span {
   box-shadow: 0px 2px 4px 0px rgba(12, 0, 46, 0.04);
   font: 300 15px "Poppins", sans-serif;
   color: #9ca3b9;
-  height: 55px;
+  /* height: 55px; */
   padding-left: 25px;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -22458,12 +22457,13 @@ input[type="text"] {
   display: contents !important;
 }
 .css-1hb7zxy-IndicatorsContainer {
-  height: 55px;
-  background-color: #e9ecef;
+  height: auto;
+  background-color: #e9ecef !important;
   border: 1px solid #e9ecef;
   margin-right: -1px;
   border-radius: 2px;
   margin-top: -0.5px;
+padding: 7px;
 }
 .css-1okebmr-indicatorSeparator {
   display: none !important;
@@ -22473,11 +22473,11 @@ input[type="text"] {
   color: hsl(40deg 2% 36%) !important;
 }
 
-.css-1s2u09g-control {
+/* .css-1s2u09g-control {
   height: 55px;
   background-color: #fafafa !important;
   border-color: hsl(0deg 0% 91%) !important;
-}
+} */
 
 .css-14el2xx-placeholder {
   line-height: 56px;
@@ -22512,13 +22512,13 @@ background-color: #0353e9;
 margin-right:5px;
 }
 
-.css-1pahdxg-control,
+/* .css-1pahdxg-control,
 .css-1pahdxg-control:hover {
   height: 55px;
   background-color: #fafafa !important;
   border-color: hsl(0deg 0% 91%) !important;
   box-shadow: 0px 10px 14px 0px rgb(12 0 46 / 6%) !important;
-}
+} */
 /* Drag Upload Css */
 @-webkit-keyframes passing-through {
   0% {
@@ -23332,9 +23332,10 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
   color:orange !important;
 }
 .css-qbdosj-Input {
-  grid-area: 1/1/2/3;
+  grid-area: 0 !important;
   margin: -12px !important;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .swal-title {
