@@ -3,38 +3,60 @@ import React, { useState, useEffect } from "react";
 import "flatpickr/dist/themes/confetti.css";
 import Lightbox from "react-awesome-lightbox";
 import "react-awesome-lightbox/build/style.css";
+import { CryptoState } from "../../FarmerContext";
+import { Card, CardBody, CardHeader } from "reactstrap";
 
 const Preview = () => {
-  const [modalShow, setModalShow] = useState(false);
-  var Api_Url =process.env.REACT_APP_API_URL
+  const {
+    userDetails,
+    setUserDetails,
+    loginModal,
+    bussiness,
+    education,
+    bank,
+    certificate,
+    KycDetail,
+    personal,
+  } = CryptoState();
+ 
+
+
+  var Api_Url = process.env.REACT_APP_API_URL;
   const [isEffects, setisEffects] = useState(false);
   const [showFinalimage, setShowFinalImage] = useState({});
-  // console.clear()
-  let user_token = localStorage.getItem("token")
-  const [userDetails, setUserDetails] = useState();
-  var data = localStorage.getItem("userDetail");
+  let user_token = localStorage.getItem("token");
 
-  var id = localStorage.getItem("applicant_id");
+  var data = localStorage.getItem("userDetail");
+  var id = localStorage.getItem("user-info-id");
+
   var requestOptions = {
     method: "GET",
     redirect: "follow",
-    headers: { Authentication: `Token ${user_token}`,}   
-
+    headers: { Authentication: `Token ${user_token}` },
   };
 
   useEffect(() => {
     try {
       setTimeout(() => {
-        fetch(`${Api_Url}/api/user-info/${id}`, requestOptions)
+        fetch(`${Api_Url}/api/user-info/${id}?created_by=0`, requestOptions)
           .then((r) => r.json())
           .then((result) => {
             setUserDetails(result.data);
           });
-      }, 1000);
+      });
     } catch (err) {
       console.log(err);
     }
-  }, [data]);
+  }, [
+    !loginModal,
+    personal,
+    bussiness,
+    education,
+    bank,
+    certificate,
+    KycDetail,
+    data,
+  ]);
 
   if (userDetails) {
     var dataimg = userDetails.all_media;
@@ -47,18 +69,23 @@ const Preview = () => {
       <div className="px-4">
         <div className="login_info pl-0">
           <h2 className="f_p f_600 f_size_24 t_color3 mb_40 mt_20 text-center">
-            Preview
             <span className="f_700"> Application</span> Details
           </h2>
           <div className="formdetails">
             <div className="row">
+              <div className="col-lg-12">
+                <h4 className="mb-1">Personal Details</h4>
+                <hr />
+              </div>
               <div className="col-lg-4 form-group text_box">
                 <label className="f_p text_c f_400">Legal Entity Type</label>
                 <input
                   name="EntityType"
                   type="text"
                   defaultValue={
-                    userDetails ? userDetails?.personal_details?.individuals : ""
+                    userDetails
+                      ? userDetails?.personal_details?.individuals
+                      : ""
                   }
                   disabled
                 />
@@ -97,9 +124,7 @@ const Preview = () => {
                   name=""
                   type="text"
                   defaultValue={
-                    userDetails
-                      ? userDetails.personal_details?.alternatePhoneNumber
-                      : ""
+                    userDetails?.personal_details?.alternatePhoneNumber    
                   }
                   disabled
                 />
@@ -109,11 +134,16 @@ const Preview = () => {
                 <input
                   name=""
                   type="text"
-                  defaultValue={userDetails ? userDetails?.email : ""}
+                  defaultValue={userDetails?.email }
                   disabled
                 />
               </div>
-
+            </div>
+            <div className="row  text-left mb-3">
+              <div className="col-lg-12">
+                <h4 className="mb-1 mt-2">KYC Details</h4>
+                <hr />
+              </div>
               <div className="col-lg-4 form-group text_box">
                 <label className="f_p text_c f_400">Date Of Birth</label>
                 <input
@@ -150,12 +180,6 @@ const Preview = () => {
                   }
                   disabled
                 />
-              </div>
-            </div>
-            <div className="row highlightpart text-left mb-3">
-              <div className="col-lg-12">
-                <h4 className="mb-1">Residential Details</h4>
-                <hr />
               </div>
               <div className="col-lg-4 form-group text_box">
                 <div className="mb-3">
@@ -217,8 +241,106 @@ const Preview = () => {
                   disabled
                 />
               </div>
+              <div className=" col-lg-3 form-group text_box">
+                <label className="f_p text_c f_400">
+                  No. of Family Member{" "}
+                </label>
+                <input
+                  name=""
+                  type="text"
+                  defaultValue={
+                    userDetails ? userDetails?.personal_details?.noOfMember : ""
+                  }
+                  disabled
+                />
+              </div>
+              <div className=" col-lg-4 form-group text_box">
+                <label className="f_p text_c f_400">Nominee</label>
+                <input
+                  name=""
+                  type="text"
+                  defaultValue={
+                    userDetails
+                      ? userDetails?.personal_details?.nomineeName
+                      : ""
+                  }
+                  disabled
+                />
+              </div>
+
+              <div className="col-lg-5 form-group text_box">
+                <div className="mb-3">
+                  <label className="f_p text_c f_400">
+                    Relationship of Nominee
+                  </label>
+                  <input
+                    name=""
+                    type="text"
+                    defaultValue={
+                      userDetails
+                        ? userDetails?.personal_details?.nomineeRelationship
+                        : ""
+                    }
+                    disabled
+                  />
+                </div>
+              </div>
+              <div className="col-lg-4 form-group text_box">
+                <div className="mb-3">
+                  <label className="f_p text_c f_400">Occupation</label>
+                  <input
+                    name=""
+                    type="text"
+                    defaultValue={
+                      userDetails
+                        ? userDetails?.personal_details?.martialStatus
+                        : ""
+                    }
+                    disabled
+                  />
+                </div>
+              </div>
+              <div className=" col-lg-4 form-group text_box">
+                <label className="f_p text_c f_400">Aadhar Number</label>
+                <input
+                  name=""
+                  type="text"
+                  defaultValue={
+                    userDetails
+                      ? userDetails?.personal_details?.aadharNumber
+                      : ""
+                  }
+                  disabled
+                />
+              </div>
+              <div className=" col-lg-4 form-group text_box">
+                <label className="f_p text_c f_400">PAN Number</label>
+                <input
+                  name=""
+                  type="text"
+                  defaultValue={
+                    userDetails ? userDetails?.personal_details?.panNumber : ""
+                  }
+                  disabled
+                />
+              </div>
+              <div className="col-lg-4 form-group text_box">
+                <div className="mb-3">
+                  <label className="f_p text_c f_400">Other Document No</label>
+                  <input
+                    name=""
+                    type="text"
+                    defaultValue={
+                      userDetails
+                        ? userDetails?.personal_details?.otherDocumentNumber
+                        : ""
+                    }
+                    disabled
+                  />
+                </div>
+              </div>
             </div>
-            <div className="row">
+            {/* <div className="row">
               <div className="col-lg-12">
                 <h4 className="mb-1">Other Details</h4>
                 <hr />
@@ -280,50 +402,8 @@ const Preview = () => {
                   />
                 </div>
               </div>
-            </div>
-            <div className="row highlightpart text-left mb-3">
-              <div className="col-lg-12">
-                <h4 className="mb-1">Document Details</h4>
-                <hr />
-              </div>
-              <div className=" col-lg-4 form-group text_box">
-                <label className="f_p text_c f_400">Aadhar Number</label>
-                <input
-                  name=""
-                  type="text"
-                  defaultValue={
-                    userDetails ? userDetails?.personal_details?.aadharNumber : ""
-                  }
-                  disabled
-                />
-              </div>
-              <div className=" col-lg-4 form-group text_box">
-                <label className="f_p text_c f_400">PAN Number</label>
-                <input
-                  name=""
-                  type="text"
-                  defaultValue={
-                    userDetails ? userDetails?.personal_details?.panNumber : ""
-                  }
-                  disabled
-                />
-              </div>
-              <div className="col-lg-4 form-group text_box">
-                <div className="mb-3">
-                  <label className="f_p text_c f_400">Other Document No</label>
-                  <input
-                    name=""
-                    type="text"
-                    defaultValue={
-                      userDetails
-                        ? userDetails?.personal_details?.otherDocumentNumber
-                        : ""
-                    }
-                    disabled
-                  />
-                </div>
-              </div>
-            </div>
+            </div> */}
+
             <div className="row">
               <div className="col-lg-12">
                 <h4 className="mb-1">Education Details</h4>
@@ -362,7 +442,7 @@ const Preview = () => {
                 />
               </div>
             </div>
-            <div className="row highlightpart text-left mb-3">
+            <div className="row  text-left mb-3">
               <div className="col-lg-12">
                 <h4 className="mb-1">Banking Details</h4>
                 <hr />
@@ -499,7 +579,7 @@ const Preview = () => {
               </div>
             </div>
 
-            <div className="row highlightpart text-left mb-3">
+            <div className="row  text-left mb-3">
               <div className="col-lg-12">
                 <h4 className="mb-1">Business Details</h4>
                 <hr />
@@ -511,8 +591,8 @@ const Preview = () => {
                     name=""
                     type="text"
                     defaultValue={
-                      userDetails && userDetails.business_details
-                        ? userDetails.business_details.income_source
+                      userDetails && userDetails?.business_details
+                        ? userDetails?.business_details.income_source
                         : ""
                     }
                     disabled
@@ -589,7 +669,7 @@ const Preview = () => {
                   disabled
                 />
               </div>
-              <div className="col-lg-6 form-group text_box">
+              <div className="col-lg-4 form-group text_box">
                 <label className="f_p text_c f_400" htmlFor="Yes">
                   Experience in agri output
                 </label>
@@ -607,7 +687,7 @@ const Preview = () => {
                 />
               </div>
 
-              <div className="col-lg-12 form-group text_box">
+              <div className="col-lg-8 form-group text_box">
                 <label className="f_p text_c f_400">
                   Have you taken professional training for insurance or banking
                   products
@@ -631,56 +711,55 @@ const Preview = () => {
             <div className=" form-group mb-4">
               <label className="f_p text_c f_400">Your Documents</label>
 
-              <div className="row">
+              <div className="row ">
                 {dataimg &&
-                  dataimg.map((res,index) => (
+                  dataimg.map((res, index) =>
                     // console.log(res.file_extension ,"check img")
 
-                   res.file_extension === ".pdf" ?  <div className="col-lg-2 document_div mt-3 " key={index}>
-                   <p className="text-center m-0">{res.document_type}</p>
-                   <div
-                     key={res.id}
-                     className="card"
-                   >
-                     <iframe
-                       src={res ? res.filename : ""}
-                       className="documents"
-                      
-                     />
+                    res.file_extension === ".pdf" ? (
+                      <Card className=" mt-3 " key={index}>
+                        <CardHeader className="text-center p-1 m-0">
+                          {res.document_type}
+                        </CardHeader>
+                        <CardBody key={res.id} className="">
+                          <iframe
+                            src={res ? res.filename : ""}
+                            className="documents"
+                          />
 
-                     {/* {res.file_extension === '.pdf'? <iframe src={res.filename} width="100%" height="100" allow="autoplay"></iframe> : <img  src={res ? res.filename : "" } alt="" ></img>} */}
-                   </div>
-                 </div>:
-                    <div className="col-lg-2 document_div mt-3 " key={index}>
-                      <p className="text-center m-0">{res.document_type}</p>
-                      <div
-                        key={res.id}
-                        className="card"
-                      >
-                        <img
-                          src={res ? res.filename : ""}
-                          className="documents"
-                          onClick={(e) => {
-                            setisEffects(true);
-                            setShowFinalImage(
-                              res.filename
-                            );
-                          }}
-                        />
-
-                      </div>
-                    </div>
-                  ))}
+                          {/* {res.file_extension === '.pdf'? <iframe src={res.filename} width="100%" height="100" allow="autoplay"></iframe> : <img  src={res ? res.filename : "" } alt="" ></img>} */}
+                        </CardBody>
+                      </Card>
+                    ) : (
+                      <Card lg={3} className="  mt-3 " key={index}>
+                        <CardHeader className="text-center p-1 m-0">
+                          {res.document_type ===
+                          "Police Verification Certificate"
+                            ? "Police Verification"
+                            : res.document_type}
+                        </CardHeader>
+                        <CardBody key={res.id} className="card ">
+                          <img
+                            src={res ? res.filename : ""}
+                            className="documents"
+                            onClick={(e) => {
+                              setisEffects(true);
+                              setShowFinalImage(res.filename);
+                            }}
+                          />
+                        </CardBody>
+                      </Card>
+                    )
+                  )}
               </div>
               {isEffects ? (
-                        <Lightbox
-                          image={showFinalimage}
-                          onClose={() => {
-                            setisEffects(!isEffects);
-                          }}
-                        />
-                      ) : null}
-              
+                <Lightbox
+                  image={showFinalimage}
+                  onClose={() => {
+                    setisEffects(!isEffects);
+                  }}
+                />
+              ) : null}
             </div>
           </div>
         </div>

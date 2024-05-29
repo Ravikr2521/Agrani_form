@@ -117,10 +117,12 @@ const Existinguser = () => {
           Swal.fire(result.message);
         }
 
-        if (result.data.ui_section_id == 5) {
+        if ( result.data.ui_section_id === 5  )    {
           history.push("/final-preview");
         }
+        
       });
+     
   };
 
   // console.log(urlid + " existing");

@@ -133,7 +133,7 @@ const FarmerSaathi = () => {
           Swal.fire(result.message)
         }
 
-        if (result.ui_section_id == 5) {
+        if (result.ui_section_id == 6) {
           history.push('/final-preview')
         }
 
@@ -156,7 +156,7 @@ const FarmerSaathi = () => {
           </h3>
 
 
-          {urlid === undefined || urlid === "undefined" || urlid === null || urlid === 0 ? (
+          {/* {urlid === undefined || urlid === "undefined" || urlid === null || urlid === 0 ? (
             <>
               <Link to="/Existinguser"
                 type="submit"
@@ -187,10 +187,12 @@ const FarmerSaathi = () => {
               >
                 Logout
               </button>
-            )}
+            )} */}
 
         </div>
       </div>
+
+      
 
       <div className="bg-shd col-lg-11 m-auto">
         <section className="software_service_area sec_pad ">

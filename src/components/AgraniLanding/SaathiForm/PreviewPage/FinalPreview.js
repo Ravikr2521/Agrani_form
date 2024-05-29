@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 const FinalPreview = () => {
    
   
-    var id=localStorage.getItem("applicant_id")
+    var id=localStorage.getItem("user-info-id")
     window.history.pushState(null, null, document.URL);
     window.addEventListener('popstate', function () {
         window.history.pushState(null, null, document.URL);

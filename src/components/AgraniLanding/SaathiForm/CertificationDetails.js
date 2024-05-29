@@ -5,17 +5,26 @@ import Swal from "sweetalert2";
 import { SaathiService } from "../../../service/saathi.service";
 import { CryptoState } from "../../FarmerContext";
 import { useHistory } from "react-router-dom";
-import swal from "sweetalert";
+import { Spinner } from "react-bootstrap";
 
 const CertificationDetails = () => {
   var Api_Url = process.env.REACT_APP_API_URL;
   // console.clear()
   const history = useHistory();
-  const { setCertificate, SetCorporate } = CryptoState();
+  const { setCertificate, SetCorporate ,userDetails } = CryptoState();
 
   const [Qualificationlist, setQualificationlist] = useState({});
   const [changeEvent, SetChangeEvent] = useState(null);
   const [Change, setChange] = useState(null);
+  const [loading,setLoading]=useState(false)
+
+
+useEffect(() => {
+  if(userDetails?.certification_details?.is_insurance_exam_passed)
+  SetChangeEvent(userDetails?.certification_details?.is_insurance_exam_passed)
+  if(userDetails?.certification_details?.is_banking_exam_passed)
+  setChange(userDetails?.certification_details?.is_banking_exam_passed)
+}, [userDetails?.certification_details]);
 
 
   useEffect(() => {
@@ -26,18 +35,20 @@ const CertificationDetails = () => {
       });
   }, []);
 
-  const [InsuranceExamStatus, setInsuranceExamStatus] = useState([]);
+  const [InsuranceExamStatus, setInsuranceExamStatus] = useState("");
   function handelInsuranceExamStatus(InsuranceExamStatus) {
     setInsuranceExamStatus(InsuranceExamStatus);
     SetChangeEvent(InsuranceExamStatus);
   }
 
-  const [BankingExamStatus, setBankingExamStatus] = useState([]);
+  
+  const [BankingExamStatus, setBankingExamStatus] = useState("");
 
   function handelBankingExamStatus(BankingExamStatus) {
     setBankingExamStatus(BankingExamStatus);
     setChange(BankingExamStatus);
   }
+
   // ExamStatusData selectbox
   const ExamStatusData = [
     {
@@ -57,22 +68,24 @@ const CertificationDetails = () => {
     formState: { errors, isValid },
   } = useForm({ mode: "onChange" });
 
+
   const onSubmit = (data) => {
     SetCorporate(true);
+    setLoading(true)
 
     localStorage.setItem("userDetail", JSON.stringify(data));
 
     let user_token = localStorage.getItem("token");
-    var userId = localStorage.getItem("applicant_id");
+    var userId = localStorage.getItem("user-info-id");
     setUserData(data);
 
     var formdata = new FormData();
-    formdata.append("is_insurance_exam_passed", InsuranceExamStatus);
-    formdata.append("is_banking_exam_passed", BankingExamStatus);
+    formdata.append("is_insurance_exam_passed", InsuranceExamStatus === "" ? userDetails?.certification_details?.is_insurance_exam_passed : InsuranceExamStatus);
+    formdata.append("is_banking_exam_passed", BankingExamStatus === "" ? userDetails?.certification_details?.is_banking_exam_passed : BankingExamStatus );
     formdata.append("applicant_id", userId);
 
-    for (let a = 0; a < data.posp_certificate.length; a++) {
-      if (InsuranceExamStatus == false) {
+    for (let a = 0; a < data?.posp_certificate?.length; a++) {
+      if (InsuranceExamStatus === false) {
         formdata.append("posp_certificate", []);
       } else {
         formdata.append("posp_certificate", data.posp_certificate[a]);
@@ -80,21 +93,23 @@ const CertificationDetails = () => {
     }
 
     for (let b = 0; b < data?.bank_certificate?.length; b++) {
-      if (BankingExamStatus == false) {
+      if (BankingExamStatus === false) {
         formdata.append("bank_certificate", []);
       } else {
         formdata.append("bank_certificate", data.bank_certificate[b]);
       }
     }
 
-    for (let c = 0; c < data.police_verification_certificate.length; c++) {
+    for (let c = 0; c < data?.police_verification_certificate?.length; c++) {
       formdata.append(
         "police_verification_certificate",
         data.police_verification_certificate[c]
       );
     }
 
-    formdata.append("ui_section_id", "4");
+    formdata.append("ui_section_id", "5");
+    formdata.append("created_by", "0");
+    formdata.append("created_by_name", "Self");
 
     var requestOptions = {
       method: "POST",
@@ -106,29 +121,32 @@ const CertificationDetails = () => {
     fetch(`${Api_Url}/api/certification-details/`, requestOptions)
       .then((r) => r.json())
       .then((result) => {
-        console.log(result, "check result")
-        
-        result.status === 200 || result.status === 201
-          ? Swal.fire({
-              icon: "success",
-              title: result.message,
-              buttons: false,
-              timer: 1500,
-            }) && setCertificate(true)
-          : 
+      
+        if (result.status === 200 || result.status === 201) {
+          Swal.fire({
+            icon: "success",
+            title: result.message,
+            buttons: false,
+            timer: 1500,
+          });
+          setCertificate(true);
+          setLoading(false)
+        } else {
           Swal.fire({
             icon: "warning",
             title: result.message,
             timer: 3000,
-          })
-         
-
+          });
+          setLoading(false)
+        }
+      
         if ("detail" in result) {
           Swal.fire("Please Fill your Application");
           history.push("/");
           return;
         }
-      });
+      })
+      
   };
 
   return (
@@ -152,16 +170,15 @@ const CertificationDetails = () => {
                     </label>
                     <Select
                       required
-                      value={
-                        InsuranceExamStatus === undefined
-                          ? InsuranceExamStatus
-                          : InsuranceExamStatus.label
-                      }
+                      value={InsuranceExamStatus?.label}
                       onChange={(InsuranceExamStatus) => {
                         handelInsuranceExamStatus(InsuranceExamStatus.value);
                       }}
                       options={ExamStatusData}
                       classNamePrefix="select2-selection"
+                      placeholder={!userDetails?.certification_details?.is_insurance_exam_passed ? !userDetails?.certification_details?.is_insurance_exam_passed  ? !userDetails?.certification_details ? 'Select':'No' : "Yes" : 
+                      !userDetails?.certification_details ? 'Select' : !userDetails?.certification_details?.is_insurance_exam_passed ? "No" : "Yes"
+                    }
                     />
                   </div>
                 </div>
@@ -175,16 +192,14 @@ const CertificationDetails = () => {
                     </label>
                     <Select
                       required
-                      value={
-                        BankingExamStatus === undefined
-                          ? BankingExamStatus
-                          : BankingExamStatus.label
-                      }
+                      value={BankingExamStatus?.label  }
                       onChange={(BankingExamStatus) => {
                         handelBankingExamStatus(BankingExamStatus.value);
                       }}
                       options={ExamStatusData}
                       classNamePrefix="select2-selection"
+                      placeholder={!userDetails?.certification_details?.is_banking_exam_passed ? !userDetails?.certification_details?.is_banking_exam_passed ? !userDetails?.certification_details ? 'Select' :'No' : "Yes" : 
+                      !userDetails?.certification_details ? 'select' : !userDetails?.certification_details?.is_banking_exam_passed ? "No" : "Yes"}
                     />
                   </div>
                 </div>
@@ -200,7 +215,7 @@ const CertificationDetails = () => {
                     accept="image/*,.pdf"
                     name="posp_certificate"
                     {...register("posp_certificate", {
-                      disabled: changeEvent == null ? true : false,
+                      disabled: !changeEvent  ? true : false,
                     })}
                   />
                   <small>(image or Pdf Format Only)</small>{" "}
@@ -217,7 +232,7 @@ const CertificationDetails = () => {
                     name="bank_certificate"
                     accept="image/*,.pdf"
                     {...register("bank_certificate", {
-                      disabled: Change == null ? true : false,
+                      disabled: !Change ? true : false,
                     })}
                   />
                   <small>(image or Pdf Format Only)</small>{" "}
@@ -248,7 +263,10 @@ const CertificationDetails = () => {
                   className="saved_btn"
                   onClick={handleSubmit(onSubmit)}
                 >
-                  Save
+                  {userDetails?.certification_details === null 
+                      ? "Save"
+                      : "Update"}
+                       &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
                 </button>
               </div>
             </form>

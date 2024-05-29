@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AsyncSelect from 'react-select/async';
 import Select from 'react-select';
 
@@ -7,6 +7,7 @@ import Swal from 'sweetalert2'
 import { SaathiService } from "../../../service/saathi.service";
 import { CryptoState } from "../../FarmerContext";
 import { useHistory } from "react-router-dom";
+import { Spinner } from "react-bootstrap";
 
 
 const BankDetails = (urlid) => {
@@ -15,12 +16,13 @@ const BankDetails = (urlid) => {
   // console.clear()
   const history =useHistory()
   
-  const {setBank,SetCorporate} = CryptoState()
-  
+  const {setBank,SetCorporate, setCompletedSection,userDetails} = CryptoState()
+  const [loading,setLoading]=useState(false)
 
-  const [AccountType, setAccountType] = useState([]);
+  const [AccountType, setAccountType] = useState("");
   const [inputValue, setValue] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
+
  
   function handleAccountType(AccountType) {
     setAccountType(AccountType);
@@ -43,6 +45,9 @@ const BankDetails = (urlid) => {
       console.warn("Not data fetch :(")
     });
   };
+  useEffect(()=>{
+    loadOptions()
+  },[])
 
   // console.log(JSON.stringify(selectedValue) + " adddres " + JSON.stringify(SearchIfsccode))
   const [BankingDtails, editBankingDtails] = useState({})
@@ -72,28 +77,31 @@ const BankDetails = (urlid) => {
   
 
     const onSubmit = (data) => {
+      setLoading(true)
       SetCorporate(true)
       localStorage.setItem("userDetail", JSON.stringify(data))
       let user_token = localStorage.getItem("token")
-      console.log(user_token,"token")
       setUserData(data)
   
-      var userId =localStorage.getItem("applicant_id")
+      var userId =localStorage.getItem("user-info-id")
        
+      
       var formdata = new FormData();
-      formdata.append("account_holder_name", data.account_holder_name);
-      formdata.append("account_number", data.account_number);
-      formdata.append("account_type", AccountType);
-      formdata.append("ifsc_code", selectedValue.ifsc);
-      formdata.append("bank_name", selectedValue.bank_name);
-      formdata.append("bank_branch", selectedValue.branch_name);
+      formdata.append("account_holder_name", data.account_holder_name || userDetails?.bank_details?.account_holder_name);
+      formdata.append("account_number", data?.account_number || userDetails?.bank_details?.account_number);
+      formdata.append("account_type", AccountType || userDetails?.bank_details?.account_type);
+      formdata.append("ifsc_code", selectedValue.ifsc || userDetails?.bank_details?.ifsc_code);
+      formdata.append("bank_name", selectedValue.bank_name || userDetails?.bank_details?.bank_name);
+      formdata.append("bank_branch", selectedValue.branch_name || userDetails?.bank_details?.bank_branch);
 
       for (let a = 0; a < data.bank_document.length; a++) {
         formdata.append("bank_document", data.bank_document[a]);
       };
 
       formdata.append("applicant_id", userId);
-      formdata.append("ui_section_id", "3");
+      formdata.append("ui_section_id", "4");
+      formdata.append("created_by", "0");
+      formdata.append("created_by_name", "Self");
        for (var pair of formdata.entries()) {
       console.log(pair[0] + ', ' + pair[1]);
     }
@@ -108,27 +116,31 @@ const BankDetails = (urlid) => {
       fetch(`${Api_Url}/api/bank-details/`, requestOptions)
   
       .then(r => r.json())
-      .then(result=> {  
-
-        result.status == 201 || result.status ==200
-        ? Swal.fire({
+      .then(result => {
+        if (result?.status === 200 || result.status === 201) {
+          Swal.fire({
             icon: "success",
             title: result?.message,
             timer: 1500,
-          }) && setBank(true)
-        : Swal.fire({
-          icon: "warning",
-          title: result.message,
-          timer: 2000,
-        })
-       
-        if('detail' in result.result){
-          Swal.fire("Please Fill your Application");
-          history.push("/")
-          return
+          });
+          setBank(true);
+          setCompletedSection("4");
+          setLoading(false)
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: result.message,
+            timer: 2000,
+          });
+          setLoading(false)
         }
       
-      },)   
+        if ('detail' in result.result) {
+          Swal.fire("Please Fill your Application");
+          history.push("/");
+          return;
+        }
+      }) 
     };
 
   return (
@@ -148,10 +160,10 @@ const BankDetails = (urlid) => {
                   name='account_holder_name'
                   type="text"
                   placeholder="Enter Account Holde Name"
-                  required
+                  required={!userDetails?.bank_details?.account_holder_name ? true :false}
                   {...register("account_holder_name", {
-                    required: true,
                   })}
+                  defaultValue={ userDetails?.bank_details?.account_holder_name }
                 />
               {errors.account_holder_name && <p className='m input-error'>Enter Name</p>}
               </div>
@@ -163,11 +175,11 @@ const BankDetails = (urlid) => {
                    name='account_number'
                   type="text"
                   placeholder="Enter Account No."
-                  required
+                  required={!userDetails?.bank_details?.account_number ? true :false}
                   {...register("account_number", {
-                    required: true,
 
                   })}
+                  defaultValue={ userDetails?.bank_details?.account_number }
                 />
                 {errors.account_number && <p className='m input-error'>Enter Account No</p>}
               </div>
@@ -183,13 +195,13 @@ const BankDetails = (urlid) => {
                     value={
                       AccountType === undefined
                         ? AccountType
-                        : AccountType.label
+                        : AccountType.label || userDetails?.bank_details?.account_type
                     }
                     onChange={(AccountType) => {
-                      handleAccountType(AccountType.value);
-                   console.log(AccountType) }}
+                      handleAccountType(AccountType.value);}}
                     options={AccountTypeListData}
                     classNamePrefix="select2-selection"
+                    placeholder={userDetails?.bank_details?.account_type || "Select Account Type"}
                   />
                 </div>
               </div>
@@ -206,10 +218,12 @@ const BankDetails = (urlid) => {
                     getOptionValue={(e) => e.id}
                     loadOptions={(e)=>loadOptions(e)}
                     onInputChange={handleInputChange}
-                    onChange={(ifsc)=>{handleChange(ifsc)
-                    console.log(ifsc["ifsc"])}}
+                    onChange={(ifsc)=>{handleChange(ifsc)}}
+                    placeholder={userDetails?.bank_details?.ifsc_code || "Select IFSC Code"}
+
                   />
                    {errors.ifsc_code && <p className='m input-error'>Enter IFSC code</p>}
+
                 </div>
               </div>
 
@@ -223,9 +237,13 @@ const BankDetails = (urlid) => {
                   onChange={(e) => {
                     onInputChange(e);
                   }}
-                  value={selectedValue !== null ? selectedValue.bank_name : " "}
-             
                   disabled
+                  value={
+                    selectedValue === undefined
+                      ? selectedValue
+                      : selectedValue.bank_name || userDetails?.bank_details?.bank_name 
+                  }
+
                 />
               </div>
               <div className="col-lg-6 form-group text_box">
@@ -237,12 +255,13 @@ const BankDetails = (urlid) => {
                   onChange={(e) => {
                     onInputChange(e);
                   }}
-               
-                  value={
-                    selectedValue !== null ? selectedValue.branch_name : " "
-                  }
-             
+                  // defaultValue={ userDetails?.bank_details?.bank_branch }
                   disabled
+                  value={
+                    selectedValue === undefined
+                      ? selectedValue
+                      : selectedValue.branch_name || userDetails?.bank_details?.bank_branch
+                  }
                 />
               </div>
               <div className="col-lg-6 form-group mb-4">
@@ -272,7 +291,10 @@ const BankDetails = (urlid) => {
            
                   <div className="col-lg-4 m-auto pb-5 justify-content-center text-center">
                     <button type="submit" className="saved_btn" onClick={handleSubmit(onSubmit)}>
-                      Save
+                    {userDetails?.bank_details === null 
+                      ? "Save"
+                      : "Update"}
+                       &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
                     </button>
                   </div>
 

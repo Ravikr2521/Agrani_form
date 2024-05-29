@@ -1,35 +1,47 @@
 import React, { useState } from "react";
 import FooterTwo from "../components/AgraniLanding/FooterTwo";
 import FooterData from "../components/Footer/FooterData";
-import CloudServiceTab from "../components/AgraniLanding/SaathiForm/CloudServiceTab";
 import OnepageMenu from "../components/AgraniLanding/OnepageMenu";
-import Preview from "../components/AgraniLanding/SaathiForm/Preview";
 import { useEffect } from "react";
 import FinalPreview from "../components/AgraniLanding/SaathiForm/PreviewPage/FinalPreview";
 import { FaDownload } from "react-icons/fa";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { CryptoState } from "../components/FarmerContext";
+import UploadSignedDoc from "../components/AgraniLanding/SaathiForm/UploadSignedDoc";
 
 const SaathiPreview = () => {
+  const {
+    userDetails
+  } = CryptoState();
+  console.log(userDetails , "userDetails")
   // console.clear()
   const history = useHistory();
   const [downloadUrl, setdownloadUrl] = useState("");
   var Api_Url =process.env.REACT_APP_API_URL
   localStorage.getItem("userDetail");
-  var id = localStorage.getItem("applicant_id");
+  var id = localStorage.getItem("user-info-id");
+  let user_token = localStorage.getItem("token")
   // console.log(id)
 
   function handlePreview() {
     history.push("/UserPreview");
     return;
   }
-  function handleLogout() {
-    localStorage.clear(id);
-    history.push("/");
-    return;
-  }
+  // function handleLogout() {
+  //   localStorage.clear(id);
+  //   history.push("/");
+  //   return;
+  // }
+
+  var requestOptions = {
+    method: "GET",
+    redirect: "follow",
+    headers: { Authentication: `Token ${user_token}`,}   
+
+  };
 
   function handleClick() {
-    fetch(`${Api_Url}/api/download-form/${id}`)
+    fetch(`${Api_Url}/api/download-form/${id}?created_by=0` ,requestOptions)
       .then((r) => r.json())
       .then((result) => {
         setdownloadUrl(result.data["download-link"]);
@@ -51,7 +63,7 @@ const SaathiPreview = () => {
       />
 
       <div className="bg-shd col-lg-11 mx-auto mt-5 pt-5">
-        <div className="col-lg-1 mx-auto">
+        {/* <div className="col-lg-1 mx-auto">
           <Link href="/">
             <button
               type="submit"
@@ -61,7 +73,7 @@ const SaathiPreview = () => {
               Logout
             </button>
           </Link>
-        </div>
+        </div> */}
         <section className="software_service_area sec_pad mt-4">
           <div className="container">
             <div className="row">
@@ -88,15 +100,19 @@ const SaathiPreview = () => {
                             </button>
                             <button
                               type="button"
-                              className="btn_three mr-2 mt-2"
+                              className="btn_three mr-2 mt-2 dbtnclr"
                               onClick={handleClick}
                             >
-                              <a href={downloadUrl} className="dbtnclr">
+                              <a href={downloadUrl} >
                                 Download Form <FaDownload />
                               </a>
                             </button>
                           </div>
                         </div>
+                      </div>
+                      {userDetails && userDetails.is_agreed !== false && userDetails?.is_attached_by_agent !== false && (userDetails?.onboarding_status !== "QC1 Approved" ? false : true) ? "" : <UploadSignedDoc/>}
+                      <div>
+
                       </div>
                     </form>
                   </div>

@@ -4,20 +4,19 @@ import "flatpickr/dist/themes/confetti.css";
 import Select from "react-select";
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2'
-
 import { SaathiService } from "../../../service/saathi.service";
 import { CryptoState } from "../../FarmerContext";
 import { useHistory } from "react-router-dom";
-import swal from "sweetalert";
-
+import { Spinner } from "react-bootstrap";
 
 const BusinessDetails = () => {
   
   var Api_Url =process.env.REACT_APP_API_URL
   // console.clear()
   const history=useHistory()
-  const {setBusiness,SetCorporate}=CryptoState()
+  const {setBusiness,SetCorporate,userDetails}=CryptoState()
   const [Bulkdata, setBulkdata] = useState({});
+  const [loading,setLoading]=useState(false)
   useEffect(() => {
     SaathiService.getBulkData().then((data) => setBulkdata(data))
       .catch(error => {
@@ -67,10 +66,11 @@ const BusinessDetails = () => {
 
   const onSubmit = (data) => {
     SetCorporate(true)
+    setLoading(true)
 
     localStorage.setItem("userDetail", JSON.stringify(data))
     let user_token = localStorage.getItem("token")
-    var userId = localStorage.getItem("applicant_id")
+    var userId = localStorage.getItem("user-info-id")
     setUserData(data)
 
     var formdata = new FormData();
@@ -84,7 +84,7 @@ const BusinessDetails = () => {
       })
     } else {
       formdata.append("source_of_income", IncomeSource);
-      formdata.append("income", data.income);
+      formdata.append("income", data.income || userDetails?.business_details?.income);
       formdata.append("experience_in_insurance", data.experience_in_insurance);
       formdata.append("experience_in_banking", data.experience_in_banking);
       formdata.append("experience_in_agrani_input", data.experience_in_agrani_input);
@@ -92,7 +92,9 @@ const BusinessDetails = () => {
       formdata.append("is_professional_training_insurance_and_bank_product", professionaltraining);
       formdata.append("interest_in_selling", data.interest_in_selling);
       formdata.append("applicant_id", userId);
-      formdata.append("ui_section_id", "5");
+      formdata.append("ui_section_id", "6");
+      formdata.append("created_by_name", "Self");
+      formdata.append("created_by", "0");
 
       for (var pair of formdata.entries()) {   
         console.log(pair[0] + ', ' + pair[1]);    
@@ -108,27 +110,31 @@ const BusinessDetails = () => {
       fetch(`${Api_Url}/api/business-details/`, requestOptions)
         .then(r => r.json())
         .then(result => {
-        result.status === 200 || result.status === 201
-          ? Swal.fire({
+          if (result.status === 200 || result.status === 201) {
+            Swal.fire({
               icon: "success",
               title: result.message,
               timer: 1500,
-            }) && setBusiness(true)
-          : 
-          Swal.fire({
-            icon: "warning",
-            title: result.message,
-            buttons: false,
-            timer: 3000,
-          })
-
-          if('detail' in result){
+            });
+            setBusiness(true);
+            setLoading(false)
+          } else {
+            Swal.fire({
+              icon: "warning",
+              title: result.message,
+              buttons: false,
+              timer: 3000,
+            });
+            setLoading(false)
+          }
+        
+          if ('detail' in result) {
             Swal.fire("Please Fill your Application");
             history.push("/");
-            return
+            return;
           }
-        },)
-
+        })
+        
     };
   }
   return (
@@ -161,6 +167,7 @@ const BusinessDetails = () => {
                     }}
                     options={IncomeListData}
                     classNamePrefix="select2-selection"
+                    // placeholder={userDetails?.business_details?.income_source}
                   />
                 </div>
               </div>
@@ -174,6 +181,7 @@ const BusinessDetails = () => {
                   placeholder="Enter income"
                   required
                   {...register("income")}
+                  defaultValue={userDetails?.business_details?.income}
                 />
               </div>
               
@@ -259,6 +267,7 @@ const BusinessDetails = () => {
                     }}
                     options={PlicyData}
                     classNamePrefix="select2-selection"
+                    // placeholder={userDetails?.business_details?.is_professional_training_insurance_and_bank_product === false ? "No" : "Yes"}
                   />
                 </div>
               </div>
@@ -325,7 +334,10 @@ const BusinessDetails = () => {
                
                   <div className="col-lg-4 m-auto pb-5 justify-content-center text-center">
                     <button type="submit" className="saved_btn" >
-                      Save
+                    {userDetails?.business_details === null 
+                      ? "Save"
+                      : "Update"}
+                       &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
                     </button>
                   </div>
 

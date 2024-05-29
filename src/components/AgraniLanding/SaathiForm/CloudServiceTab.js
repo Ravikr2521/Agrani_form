@@ -11,6 +11,11 @@ import { CryptoState } from "../../FarmerContext";
 import CorporateForm from "./CorporateForm";
 import { FaDownload } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
+import KycDetails from "./KycDetails";
+import { Modal } from "reactstrap";
+import Login from "../Login";
+import { Spinner } from "react-bootstrap";
+import UploadSignedDoc from "./UploadSignedDoc";
 
 const CloudServiceTab = ({ urlid }) => {
   // console.clear()
@@ -19,28 +24,36 @@ const CloudServiceTab = ({ urlid }) => {
     education,
     bank,
     personal,
+    KycDetail,
     certificate,
     business,
+    completedSection,
     corporate,
     SetCorporate,
+    loginModal,
+    userDetails
   } = CryptoState();
+  // console.log(userDetails , "userDetails")
   const history = useHistory();
   var Api_Url = process.env.REACT_APP_API_URL;
+  const applicaintId = localStorage.getItem("user-info-id");
 
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(userDetails?.is_agreed);
   const [downloadUrl, setdownloadUrl] = useState("");
   const [Verify, setVerify] = useState(false);
+  const [loading,setLoading]=useState(false)
   const verifyFunction = (e) => {
     setVerify(true);
   };
   function handleClick() {
     var id = localStorage.getItem("applicant_id");
-
-    localStorage.clear(id);
+    // localStorage.clear(id);
   }
 
+  const login_token = localStorage.getItem("token");
   const [EntityType, setEntityType] = useState("Individual");
   const [radioValue, setRadioValue] = useState(1);
+  const [currentSection, setCurrentSection] = useState("1");
 
   const onChange = (ev) => {
     console.log(ev.target.value + EntityType);
@@ -54,52 +67,72 @@ const CloudServiceTab = ({ urlid }) => {
 
   const onSubmit = () => {
     SetCorporate(true);
-
+    setLoading(true)
     let user_token = localStorage.getItem("token");
-    var id = localStorage.getItem("applicant_id");
+    var id = localStorage.getItem("user-info-id");
 
     var formdata = new FormData();
     formdata.append("is_agreed", checked);
+    formdata.append("applicant_id", id);
+    formdata.append("created_by", "0");
+    // formdata.append("created_by_name", "Self");
+    
     var requestOptions = {
       method: "PUT",
       body: formdata,
       headers: { Authentication: `Token ${user_token}` },
     };
-    console.log(id);
-    console.log(user_token);
 
     fetch(`${Api_Url}/api/preview/${id}`, requestOptions)
       .then((r) => r.json())
 
       .then((result) => {
-        console.log(result.status, result);
 
         if ("detail" in result) {
           Swal.fire("Please Fill your Application in sequence");
           history.push("/");
+          setLoading(false)
           return;
+          
         } else if (result.status == 200) {
           Swal.fire({
             icon: "success",
             text:
               "Your Applicant ID is : " +
               id +
-              "  Download Your form and sign it and send it to: 1601, 16th Floor, World Trade Tower, Plot No. C-001, Sector 16, Noida, UP - 201301   +91 6390640749   info@leadsconnect.in",
+              "  Download Your form and sign it and send it to: 1601, 16th Floor, World Trade Tower, Plot No. C-001, Sector 16, Noida, UP - 201301 .For Any Quary : +91 6390640749   info@leadsconnect.in",
             title: "Thank You, Your Application is Saved Successfully",
           });
           setdownloadUrl(result.data.empanelment_form_url);
           verifyFunction(true);
+          setLoading(false)
           document.getElementById("submitbutton").disabled = true;
-        } else Swal.fire(result.message);
-      });
+        } else{
+          Swal.fire(result.message);
+          setLoading(false)
+        }
+         
+      }).catch((error)=>{
+        Swal.fire({icon: "warning",
+        title:"Server is not responding", timer:1500},);
+        setLoading(false)
+      }
+
+      )
   };
 
-  //for navigation
+  // for navigation
   useEffect(() => {
     if (personal === true) {
+      document.getElementById("KycDetails").click();
+    }
+  }, [personal, user_id]);
+
+  useEffect(() => {
+    if (KycDetail === true) {
       document.getElementById("EducationDetails").click();
     }
-  }, [personal]);
+  }, [KycDetail]);
 
   useEffect(() => {
     if (education === true) {
@@ -125,13 +158,73 @@ const CloudServiceTab = ({ urlid }) => {
     }
   }, [business]);
 
+  useEffect(() => {
+    if (
+      business === true &&
+      certificate === true &&
+      bank === true &&
+      education === true &&
+      KycDetail === true
+    ) {
+      document.getElementById("Preview").click();
+    }
+  }, []);
+
+  const [userData, setUserData] = useState(undefined);
+
+  var user_id = localStorage.getItem("user-info-id");
+
+  var requestOptions = {
+    method: "GET",
+    redirect: "follow",
+    headers: { Authentication: `Token ${login_token}` },
+  };
+
+  useEffect(() => {
+    if (!user_id || !login_token) return;
+    var USER_DETAILS_ENDPOINT = Api_Url + "/api/user-info/" + user_id;
+
+    fetch(USER_DETAILS_ENDPOINT, requestOptions)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Object.keys(data?.data || {}).length != 0) {
+          setUserData(data?.data);
+          setCurrentSection(
+            (parseInt(data?.data?.ui_section_id) + 1).toString()
+          );
+        }
+      })
+      .catch((err) => console.log("err: ", err));
+  }, [user_id, completedSection]);
+
+  useEffect(() => {
+    if (completedSection == "0") return;
+    setCurrentSection((parseInt(completedSection) + 1).toString());
+  }, [completedSection]);
+
+  useEffect(() => {
+    var sectionIdMapper = {
+      1: "PersonalDetails",
+      2: "KycDetails",
+      3: "EducationDetails",
+      4: "BankDetails",
+      5: "CertificationDetails",
+      6: "BusinessDetails",
+      7: "Preview",
+    };
+
+    if (currentSection == "1") return;
+
+    document.getElementById(sectionIdMapper[currentSection]).click();
+  }, [currentSection]);
+
   return (
     <>
       <div className="row">
         <>
-          <div className="col-lg-9 col-md-9 m-auto">
+          <div className="col-lg-9 col-md-9 m-auto ">
             <div className="row">
-              <div className="col-lg-12 form-check text_box text-center pt-3">
+              {/* <div className="col-lg-12 form-check text_box text-center pt-3">
                 <h3 className="">Legal Entity Type</h3>
                 <div className="col-lg-12 p-0">
                   <div className="form-check form-check-inline">
@@ -168,7 +261,7 @@ const CloudServiceTab = ({ urlid }) => {
                     </label>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -199,6 +292,19 @@ const CloudServiceTab = ({ urlid }) => {
                     }`}
                     id="saas"
                     role="tabpanel"
+                    aria-labelledby="KycDetails"
+                  >
+                    <div className="row">
+                      <KycDetails />
+                    </div>
+                  </div>
+
+                  <div
+                    className={`tab-pane fade ${
+                      urlid == 2 ? "show active" : ""
+                    }`}
+                    id="education"
+                    role="tabpanel"
                     aria-labelledby="EducationDetails"
                   >
                     <div className="row">
@@ -207,7 +313,7 @@ const CloudServiceTab = ({ urlid }) => {
                   </div>
                   <div
                     className={`tab-pane fade ${
-                      urlid == 2 ? "show active" : ""
+                      urlid == 3 ? "show active" : ""
                     }`}
                     id="ma"
                     role="tabpanel"
@@ -219,7 +325,7 @@ const CloudServiceTab = ({ urlid }) => {
                   </div>
                   <div
                     className={`tab-pane fade ${
-                      urlid == 3 ? "show active" : ""
+                      urlid == 4 ? "show active" : ""
                     }`}
                     id="secure"
                     role="tabpanel"
@@ -231,7 +337,7 @@ const CloudServiceTab = ({ urlid }) => {
                   </div>
                   <div
                     className={`tab-pane fade ${
-                      urlid == 4 ? "show active" : ""
+                      urlid == 5 ? "show active" : ""
                     }`}
                     id="scale"
                     role="tabpanel"
@@ -243,7 +349,7 @@ const CloudServiceTab = ({ urlid }) => {
                   </div>
                   <div
                     className={`tab-pane fade ${
-                      urlid == 5 ? "show active" : ""
+                      urlid == 6 ? "show active" : ""
                     }`}
                     id="monitor"
                     role="tabpanel"
@@ -252,9 +358,9 @@ const CloudServiceTab = ({ urlid }) => {
                     <div className="row">
                       <Preview />
 
-                      <div className="col-lg-12 m-auto pb-2 text-center">
+                      <div className="col-lg-12 m-auto pb-2 text-">
                         <form>
-                          <div className="row mt-6">
+                          <div className="row mt-6 text-center">
                             <div className="col-lg-6 col-md-6  col-12 form-check text_box">
                               <a
                                 className="ml-4"
@@ -269,6 +375,8 @@ const CloudServiceTab = ({ urlid }) => {
                                   type="checkbox"
                                   value=""
                                   id="ExperienceinInsurance"
+                                  // defaultChecked={userDetails?.is_agreed}
+                                  // checked={checked}
                                   onChange={() => setChecked(!checked)}
                                 />
 
@@ -289,27 +397,32 @@ const CloudServiceTab = ({ urlid }) => {
                                 className="btn_three mr-2 mt-2 mb-4"
                                 onClick={handleSubmit(onSubmit)}
                               >
-                                Submit Application
+                                Submit Application 
+                                &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
                               </button>
 
                               {Verify == true ? (
                                 <>
-                                  <button
-                                    className="btn_three mr-2 mt-2"
-                                    onClick={handleClick}
-                                  >
-                                    <a
-                                      href={downloadUrl}
-                                      className="download_button"
-                                    >
-                                      Download <FaDownload />
-                                    </a>
-                                  </button>
+                                 <button
+                              type="button"
+                              className="btn_three mr-2 mt-2 dbtnclr"
+                              onClick={handleClick}
+                            >
+                              <a href={downloadUrl} >
+                                Download Form <FaDownload />
+                              </a>
+                            </button>
                                 </>
                               ) : null}
                             </div>
                           </div>
                         </form>
+{/* {console.log(userDetails.is_agreed ,userDetails?.is_attached_by_agent ,userDetails?.onboarding_status !== "QC1 Approved")} */}
+
+                        <div>
+                        {userDetails && userDetails.is_agreed !== false && userDetails?.is_attached_by_agent !== false && (userDetails?.onboarding_status !== "QC1 Approved" ? false : true) ? "" : <UploadSignedDoc/>}
+
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -344,11 +457,25 @@ const CloudServiceTab = ({ urlid }) => {
                   <li className="nav-item">
                     <span
                       className={`nav-link ${urlid == 1 ? "active" : ""}`}
-                      id="EducationDetails"
+                      id="KycDetails"
                       data-toggle="tab"
                       href="#saas"
                       role="tab"
                       aria-controls="saas"
+                      aria-selected="false"
+                      // disabled={urlid == 1 || urlid == 2 || urlid == 3 || urlid == 4 || urlid == 5 ? true : urlid == undefined ? false : false}
+                    >
+                      KYC Details
+                    </span>
+                  </li>
+                  <li className="nav-item">
+                    <span
+                      className={`nav-link ${urlid == 2 ? "active" : ""}`}
+                      id="EducationDetails"
+                      data-toggle="tab"
+                      href="#education"
+                      role="tab"
+                      aria-controls="education"
                       aria-selected="false"
                       // disabled={urlid == 1 || urlid == 2 || urlid == 3 || urlid == 4 || urlid == 5 ? true : urlid == undefined ? false : false}
                     >
@@ -357,7 +484,7 @@ const CloudServiceTab = ({ urlid }) => {
                   </li>
                   <li className="nav-item ">
                     <a
-                      className={`nav-link ${urlid == 2 ? "active" : ""}`}
+                      className={`nav-link ${urlid == 3 ? "active" : ""}`}
                       id="BankDetails"
                       data-toggle="tab"
                       href="#ma"
@@ -372,7 +499,7 @@ const CloudServiceTab = ({ urlid }) => {
 
                   <li className="nav-item">
                     <a
-                      className={`nav-link ${urlid == 3 ? "active" : ""}`}
+                      className={`nav-link ${urlid == 4 ? "active" : ""}`}
                       id="CertificationDetails"
                       data-toggle="tab"
                       href="#secure"
@@ -386,7 +513,7 @@ const CloudServiceTab = ({ urlid }) => {
                   </li>
                   <li className="nav-item">
                     <a
-                      className={`nav-link ${urlid == 4 ? "active" : ""}`}
+                      className={`nav-link ${urlid == 5 ? "active" : ""}`}
                       id="BusinessDetails"
                       data-toggle="tab"
                       href="#scale"
@@ -400,7 +527,7 @@ const CloudServiceTab = ({ urlid }) => {
                   </li>
                   <li className="nav-item">
                     <a
-                      className={`nav-link ${urlid == 5 ? "active" : ""}`}
+                      className={`nav-link ${urlid == 6 ? "active" : ""}`}
                       id="Preview"
                       data-toggle="tab"
                       href="#monitor"
@@ -419,6 +546,32 @@ const CloudServiceTab = ({ urlid }) => {
             <CorporateForm />
           )}
         </>
+        {login_token == "undefined" || login_token == null ? (
+          <Modal
+            size="l"
+            isOpen={loginModal}
+            className="d-flex justify-content-center align-items-center vh-100"
+          >
+            <div className=" thm-bg-primary">
+              {/* <button
+              type="button"
+              onClick={e => {
+                setLoginModal(false)
+              }}
+              className="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button> */}
+            </div>
+            <div className="">
+              <Login />
+            </div>
+          </Modal>
+        ) : (
+          ""
+        )}
       </div>
     </>
   );

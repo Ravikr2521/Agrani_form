@@ -158,7 +158,7 @@ const FooterData = {
         icon: 'ti-youtube',
       }
     ],
-    copywrite:"© Agrani Saathi 2022 All rights reserved (powered by leads connect)",
+    copywrite:"© Agrani Saathi 2024 All rights reserved (powered by leads connect)",
     TestimonialText: [
       {
         id: 1,

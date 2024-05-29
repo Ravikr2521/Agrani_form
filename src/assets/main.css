@@ -511,7 +511,7 @@ button:focus {
   border-radius: 10px;
   padding: 15px 50px !important;
   border: 1px solid #52b788  !important;
-  margin-top: 30px !important;
+  margin-top: 20px !important;
   -webkit-transition: all 0.3s linear;
   -o-transition: all 0.3s linear;
   transition: all 0.3s linear;
@@ -4145,7 +4145,7 @@ button:focus {
   font: 300 16px/36px "Poppins", sans-serif;
   border: 0px;
   color: #a1a8be;
-  height: 60px;
+  height: 55px;
   padding-left: 30px;
   position: relative;
   z-index: 1;
@@ -7662,7 +7662,7 @@ button:focus {
   margin: 0px;
   border: 0px;
   display: block;
-  margin-top: 48px;
+  margin-top: 25px;
 }
 
 .software_service_tab .nav-item {
@@ -7679,7 +7679,7 @@ button:focus {
   font: 400 16px "Poppins", sans-serif;
   color: #fff;
   position: relative;
-  height: 94px;
+  height: 30px;
   line-height: 19px;
 }
 .software_service_tab .nav-item .nav-link:before {
@@ -7723,6 +7723,9 @@ button:focus {
   font-family: "themify";
 }
 .software_service_tab .nav-item #PersonalDetails::before {
+  content: "\e699";
+}
+.software_service_tab .nav-item #KycDetails::before {
   content: "\e699";
 }
 .software_service_tab .nav-item #EducationDetails::before {
@@ -10820,7 +10823,7 @@ button:focus {
 
 .payment_subscribe_info .subscribe-form .form-control {
   width: 430px;
-  height: 60px;
+  height: 55px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 45px;
   background: rgba(247, 248, 252, 0.059);
@@ -11595,7 +11598,7 @@ button:focus {
   font: 300 15px/60px "Poppins", sans-serif;
   color: #9ca3b9;
   width: 100%;
-  height: 60px;
+  height: 55px;
   padding-left: 30px;
   border: 1px solid #fff;
 }
@@ -12386,7 +12389,7 @@ button:focus {
 }
 
 .text_box {
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 .text_box input[type="text"],
@@ -12395,9 +12398,9 @@ button:focus {
 .text_box input[type="email"] {
   font: 400 15px/60px "Poppins", sans-serif;
   color: #222d39;
-  height: 60px;
+  height: 55px;
   border-radius: 4px;
-  background-color: #fafafa;
+  /* background-color: #fafafa; */
   -webkit-box-shadow: 0px 2px 4px 0px rgba(12, 0, 46, 0.04);
   box-shadow: 0px 2px 4px 0px rgba(12, 0, 46, 0.04);
   width: 100%;
@@ -12703,7 +12706,7 @@ button:focus {
   -webkit-box-shadow: 0px 2px 4px 0px rgba(12, 0, 46, 0.04);
   box-shadow: 0px 2px 4px 0px rgba(12, 0, 46, 0.04);
   border: 1px solid transparent;
-  height: 60px;
+  height: 55px;
   padding: 0px 30px;
 }
 
@@ -13038,7 +13041,7 @@ button:focus {
   box-shadow: 0px 4px 22px 0px rgba(12, 0, 46, 0.06);
   border: 1px solid transparent;
   border-radius: 45px;
-  height: 60px;
+  height: 55px;
   padding: 0px 30px;
   color: #677294;
   font-size: 15px;
@@ -15916,7 +15919,7 @@ p span {
 }
 
 .car_get_quote_content .get_quote_form .form-group .form-control {
-  height: 60px;
+  height: 55px;
   border: 1px solid #ebebf7;
   border-radius: 4px;
   background: transparent;
@@ -18901,7 +18904,7 @@ input[type="text"] {
   -webkit-box-shadow: none;
   box-shadow: none;
   border-color: #e1e1e1;
-  height: 60px;
+  height: 55px;
 }
 
 .support_home_area .banner_top .subcribes .form-control.placeholder {
@@ -20368,7 +20371,7 @@ input[type="text"] {
   border-radius: 3px;
   background: #fff;
   padding-left: 25px;
-  height: 54px;
+  height: 55px;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
@@ -22406,8 +22409,9 @@ input[type="text"] {
 }
 .formdetails {
   overflow-y: auto;
-  max-height: 537px;
-  overflow-x: hidden;
+  max-height: 550px;
+  /* max-height: auto; */
+  /* overflow-x: hidden; */
   padding: 16px;
   margin-bottom: 20px;
 }
@@ -22454,7 +22458,7 @@ input[type="text"] {
   display: contents !important;
 }
 .css-1hb7zxy-IndicatorsContainer {
-  height: 60px;
+  height: 55px;
   background-color: #e9ecef;
   border: 1px solid #e9ecef;
   margin-right: -1px;
@@ -22470,7 +22474,7 @@ input[type="text"] {
 }
 
 .css-1s2u09g-control {
-  height: 60px;
+  height: 55px;
   background-color: #fafafa !important;
   border-color: hsl(0deg 0% 91%) !important;
 }
@@ -22510,7 +22514,7 @@ margin-right:5px;
 
 .css-1pahdxg-control,
 .css-1pahdxg-control:hover {
-  height: 60px;
+  height: 55px;
   background-color: #fafafa !important;
   border-color: hsl(0deg 0% 91%) !important;
   box-shadow: 0px 10px 14px 0px rgb(12 0 46 / 6%) !important;
@@ -23014,7 +23018,7 @@ margin-right:5px;
 }
 
 input[type="file"] {
-  height: 60px;
+  height: 55px;
   border: 1px solid #e7e7e7;
   padding: 14px;
   color: #a8a3b9;
@@ -23183,12 +23187,12 @@ iframe{
   margin-top: 36px;
   margin-bottom: -31px;
 }
-.download_button{
+.download_button a{
 color:white;
 box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
 
 }
-.download_button:hover{
+.download_button:hover a{
   color:orange;
  background-color: white !important;
 
@@ -23246,7 +23250,7 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
 .otp_field{
   font: 400 16px "Poppins", sans-serif;
   color: #222d39;
-  height: 60px;
+  height: 55px;
   border-radius: 4px;
   background-color: #fafafa;
   box-shadow: 0px 2px 4px 0px rgb(12 0 46 / 4%);
@@ -23297,14 +23301,22 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
   align-items: center;
 }
 .inputStyle {
-  width: 57% !important;
-  height: 44px;
+  width: 50% !important;
+  height: 40px;
   border-radius: 7px;
-  border: 0px;
+  border: 1px solid grey;
   margin-left: 8px;
   margin-right: 8px;
-  background: #dddddd;
+  background: white;
   font-size: 18px;
+}
+.login_icon{
+  position: absolute;
+    top: -2.5rem;
+    left: 13rem;
+    background: #fbfbfb;
+    padding: 12px 20px;
+    border-radius: 44px;
 }
 .zindex{
   z-index: 1000;
@@ -23313,14 +23325,13 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
   color:black !important;
   margin-left: 50px;
 }
-.dbtnclr{
+.dbtnclr a{
   color:white;
 }
-.dbtnclr:hover{
+.dbtnclr:hover a{
   color:orange !important;
 }
 .css-qbdosj-Input {
-
   grid-area: 1/1/2/3;
   margin: -12px !important;
   box-sizing: border-box;
@@ -23337,4 +23348,42 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
   line-height: normal;
   text-align: center;
   margin-bottom: 0;
+}
+.form-control {
+  display: block;
+  width: 100%;
+  height: 55px !important;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+.resend_otp{
+  top: 9rem;
+  left: 21rem;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+  .resend_otp{
+    top: 11rem;
+    left: 14rem;
+  }
+  .login_icon {
+    position: absolute;
+    top: -2.5rem;
+    left: 8.5rem;
+    background: #fbfbfb;
+    padding: 12px 20px;
+    border-radius: 44px;
+}
+}
+
+.cursor {
+  cursor: pointer;
 }

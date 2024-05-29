@@ -8,16 +8,18 @@ import { SaathiService } from "../../../service/saathi.service";
 import FarmerContext, { CryptoState } from "../../FarmerContext";
 import { useHistory } from "react-router-dom";
 import swal from "sweetalert";
+import { Spinner } from "react-bootstrap";
 
 
 const EducationDetails = ({ urlid }) => {
   // console.clear()
   const history = useHistory();
-  const { setEducation, SetCorporate } = CryptoState();
-  
+  const { setEducation, SetCorporate, setCompletedSection, userDetails } =
+    CryptoState();
+  const [loading, setLoading] = useState(false);
+
   var Api_Url = process.env.REACT_APP_API_URL;
-  let user_token = localStorage.getItem("token");
-  console.log("###", user_token)
+  // console.log(userDetails , "userDetails")
 
   const [Qualificationlist, setQualificationlist] = useState({});
   useEffect(() => {
@@ -58,14 +60,13 @@ const EducationDetails = ({ urlid }) => {
   const [changeEvent, SetChangeEvent] = useState(null);
 
   const onSubmit = (data) => {
-   
+    setLoading(true)
     SetCorporate(true);
-
-  
+    let user_token = localStorage.getItem("token");
     console.log(user_token, "token ");
 
     localStorage.setItem("userDetail", JSON.stringify(data));
-    var userId = localStorage.getItem("applicant_id");
+    var userId = localStorage.getItem("user-info-id");
     console.log(userId);
     setUserData(data);
 
@@ -76,48 +77,49 @@ const EducationDetails = ({ urlid }) => {
     for (let b = 0; b < data.degree_certificate.length; b++) {
       formdata.append("degree_certificate", data.degree_certificate[b]);
     }
-    formdata.append("ui_section_id", "2");
+    formdata.append("ui_section_id", "3");
     formdata.append("applicant_id", userId);
-
-
-  
+    formdata.append("created_by", "0");
+    formdata.append("created_by_name", "Self");
 
     for (var pair of formdata.entries()) {
       console.log(pair[0] + ", " + pair[1]);
     }
-    formdata.append("created_by", "0");
 
     var requestOptions = {
       method: "POST",
       body: formdata,
       redirect: "follow",
       headers: { Authentication: `Token ${user_token}` },
-
     };
-
-   
 
     fetch(`${Api_Url}/api/education-details/`, requestOptions)
       .then((r) => r.json())
       .then((result) => {
-        result.status === 201 || result.status === 200
-          ? Swal.fire({
-              icon: "success",
-              title: result?.message,
-              timer: 1500,
-            }) && setEducation(true)
-          : Swal.fire({
+        if (result.status === 201 || result.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: result?.message,
+            timer: 1500,
+          });
+          setEducation(true);
+          setLoading(false)
+        } else {
+          Swal.fire({
             icon: "warning",
             title: result?.message,
             timer: 3000,
           });
-
+          setLoading(false)
+        }
+      
         if ("detail" in result) {
           Swal.fire("Please Fill your Application");
           history.push("/");
           return;
         }
-      });
+      })
+
   };
 
   useEffect(() => {
@@ -167,6 +169,10 @@ const EducationDetails = ({ urlid }) => {
                           console.log(Qualification);
                         }}
                         options={QualificationListData}
+                        placeholder={
+                          userDetails?.education_details
+                            ?.highest_qualification || "Select Qualification"
+                        }
                         classNamePrefix=""
                       />
                     </div>
@@ -190,6 +196,9 @@ const EducationDetails = ({ urlid }) => {
                         maxLength: 4,
                         minLength: 4,
                       })}
+                      defaultValue={
+                        userDetails?.education_details?.year_of_passing
+                      }
                     />
                     {errors.year_of_passing && (
                       <p className="m input-error">Invalid passing year</p>
@@ -228,7 +237,8 @@ const EducationDetails = ({ urlid }) => {
                     className="saved_btn"
                     onClick={handleSubmit(onSubmit)}
                   >
-                    Save
+                    {userDetails?.education_details == null ? "Save" : "Update"}
+                    &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
                   </button>
                 </div>
               </form>
