@@ -190,7 +190,7 @@ const BusinessDetails = () => {
               <div className="col-lg-12 form-group mb-4">
                   <label className="f_p text_c f_400">Experience in : </label>
 
-                  <div className="col-lg-7 form-check text_box d-flex justify-content-between align-items-center ">
+                  <div className="col-lg-7 form-check text_box d-flex flex-lg-row flex-column justify-content-between  ">
                     <div className="form-check ">
                       <input
                         {...register("experience_in_insurance")}

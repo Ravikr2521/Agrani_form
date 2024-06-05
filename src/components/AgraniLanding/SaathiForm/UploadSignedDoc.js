@@ -73,8 +73,8 @@ const UploadSignedDoc = () => {
         }
   };
   return (
-    <div className="d-flex justify-content-center align-items-center">
-      <div className="col-lg-6 form-group mt-1">
+    <div className="d-flex flex-lg-row flex-column  justify-content-center align-items-center">
+      <div className="col-lg-6 col-12 form-group mt-1">
         <label className="f_p text_c f_400 m-0 mb-1">
           Upload Signed Document <small style={{ color: "#ff0000" }}>*</small>
           {/* <small>(Image Or Pdf Format Only*)</small> */}
@@ -96,7 +96,7 @@ const UploadSignedDoc = () => {
                     </p>
                   )} */}
       </div>
-      <div className="col-lg-2">
+      <div className="col-lg-2 col-4 mb-lg-0 mb-2">
         <button
           type="submit"
           className="btn btn-success d-flex justify-content-center align-items-center"

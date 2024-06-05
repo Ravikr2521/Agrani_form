@@ -109,7 +109,7 @@ const Login = () => {
             timer: 1000,
           });
           setLogoutButton(true);
-         
+
           //   localStorage.setItem("applicant_id" , result.data.applicant_id)
           localStorage.setItem(
             "personal_detail",
@@ -118,7 +118,7 @@ const Login = () => {
           localStorage.setItem("token", result?.data?.token);
           localStorage.setItem("phone_number", phoneNumber);
           localStorage.setItem("user-info-id", result?.data?.applicant_id);
-          history.push("/")
+          history.push("/");
           // setLoginModal(false);
         }
         if (result?.data?.onboarding_status === "Completed") {
@@ -132,7 +132,7 @@ const Login = () => {
   };
   return (
     <div>
-      <div className="d-flex justify-content-center align-items-center vh-100">
+      {/* <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="col-lg-12 d-flex flex-lg-row flex-column justify-content-center align-items-center  bg-white">
           <div className="col-lg-6 d-flex justify-content-center align-items-center display">
             <div className="text_div flex-lg-column  d-flex justify-content-center align-items-center py-5">
@@ -235,12 +235,7 @@ const Login = () => {
                 <h6 className="text-center mt-2">
                   Login /Sign Up
                 </h6>
-               {/* <div className="col-lg-12 d-flex justify-content-center text-center">
-                <div className="col-lg-7"> 
-
-               <p className="">User onboarding is the process where a product</p>
-                </div>
-                </div> */}
+             
                 <form action="#" className="login-form sign-in-form mt-3">
                   <div className="d-flex flex-column justify-content-center align-items-center">
                     {Verify === true ? (
@@ -346,124 +341,116 @@ const Login = () => {
             </Card>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      {/* <Card className="   position-relative">
-      
-      <CardBody>
-
-      <div className="text-center login_icon">
-        <h1>
-        <FaUserAlt />
-        </h1>
-
-      </div>
-      <h2 className="f_p f_600 f_size_24  mb_40 mt_20 text-center mt-4">
-       <FiLogIn/>  Login /Sign Up
-      </h2>
-      <form action="#" className="login-form sign-in-form">
-        
-      
-        <div className="d-flex flex-column justify-content-center align-items-center">
-        {Verify ===  true ? ""  : 
-         <div className="col-lg-11 text-center">
-
-
-            <div className="form-group text_box  ">
-              <input
-                className=" form-control1"
-                type="text"
-                placeholder="Enter Mobile No."
-                required
-                maxLength={10}
-                {...register("phoneNumber", {
-                  onChange: (e) => {
-                    verifyNumber(e);
-                  },
-                  required: true,
-                  minLength: 10,
-                })}
-              />
-              {errors.phoneNumber && (
-                <p className="m input-error m-0">Please enter Valid No</p>
+      <Card className="   position-relative">
+        <CardBody>
+          <div className="text-center login_icon">
+            <h1>
+              <FaUserAlt />
+            </h1>
+          </div>
+          <h2 className="f_p f_600 f_size_24  mb_40 mt_20 text-center mt-4">
+            <FiLogIn /> Login /Sign Up
+          </h2>
+          <form action="#" className="login-form sign-in-form">
+            <div className="d-flex flex-column justify-content-center align-items-center">
+              {Verify === true ? (
+                ""
+              ) : (
+                <div className="col-lg-11 text-center">
+                  <div className="form-group text_box  ">
+                    <input
+                      className=" form-control1"
+                      type="text"
+                      placeholder="Enter Mobile No."
+                      required
+                      maxLength={10}
+                      {...register("phoneNumber", {
+                        onChange: (e) => {
+                          verifyNumber(e);
+                        },
+                        required: true,
+                        minLength: 10,
+                      })}
+                    />
+                    {errors.phoneNumber && (
+                      <p className="m input-error m-0">Please enter Valid No</p>
+                    )}
+                  </div>
+                  <div className=" d-flex justify-content-center">
+                    <div className="col-lg-6 col-8 mt-lg-0 mt-3">
+                      <button
+                        id="sendotp"
+                        type="button"
+                        onClick={(e) => sendOtp()}
+                        name="otp_code"
+                        className="otp_btn mb-2 w-100"
+                        disabled={!phoneNumber}
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
-            <div className=" d-flex justify-content-center">
 
-            
-            <div className="col-lg-6">
-              <button
-                id="sendotp"
-                type="button"
-                onClick={(e) => sendOtp()}
-                name="otp_code"
-                className="otp_btn mb-2 w-100"
-                disabled={!phoneNumber}
-              >
-                Submit
-              </button>
-            </div>
-            </div>
-          </div>
-            }
-
-        </div>
-
-        {Verify === true ? (
-          <div className="row justify-content-center mt-2">
-            <div className="d-flex justify-content-center align-items-center container">
-              <div className="  px-3">
-                <h5 className="m-0">Mobile phone verification</h5>
-                <span className="mobile-text">
-                  Enter the code sent on your mobile phone{" "}
-                  <b className="text-danger">{phoneNumber}</b>
-                </span>
-                <div className="d-flex flex-row mt-3 justify-content-center align-items-center">
-                  <div className="col-lg-10">
-
-                 
-                <OTPInput
-                type="number"
-                id="otp"
-                value={otp}
-                placeholder="Enter Otp"
-                name="otp_code"
-                inputStyle="inputStyle"
-                numInputs={4}
-                onChange={handleChange}
-                separator={<span></span>}
-              />
-               </div>
-              {errors.otp_code && (
-                <p className="m input-error">Please enter valid otp</p>
-              )}
+            {Verify === true ? (
+              <div className="row justify-content-center mt-2">
+                <div className="d-flex justify-content-center align-items-center container">
+                  <div className="  px-3">
+                    <h5 className="m-0">Mobile phone verification</h5>
+                    <span className="mobile-text">
+                      Enter the code sent on your mobile phone{" "}
+                      <b className="text-danger">{phoneNumber}</b>
+                    </span>
+                    <div className="d-flex flex-row mt-3 justify-content-center align-items-center">
+                      <div className="col-lg-10">
+                        <OTPInput
+                          type="number"
+                          id="otp"
+                          value={otp}
+                          placeholder="Enter Otp"
+                          name="otp_code"
+                          inputStyle="inputStyle"
+                          numInputs={4}
+                          onChange={handleChange}
+                          separator={<span></span>}
+                        />
+                      </div>
+                      {errors.otp_code && (
+                        <p className="m input-error">Please enter valid otp</p>
+                      )}
+                    </div>
+                    <div className="text-center mt-4">
+                      <span className="d-block mobile-text">
+                        Don't receive the code?
+                      </span>
+                      <span
+                        className="font-weight-bold text-danger cursor"
+                        onClick={(e) => sendOtp()}
+                      >
+                        Resend
+                      </span>
+                    </div>
+                    <div className="text-center">
+                      <button
+                        type="submit"
+                        size=""
+                        className="btn Login_button mb-3 "
+                        onClick={handleSubmit(onSubmit)}
+                      >
+                        Login <CgLogIn />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-center mt-4">
-                  <span className="d-block mobile-text">
-                    Don't receive the code?
-                  </span>
-                  <span className="font-weight-bold text-danger cursor"  onClick={(e) => sendOtp()}>
-                    Resend
-                  </span>
-                </div>
-               <div className="text-center">
-                <button
-                type="submit"
-                size=""
-                className="btn Login_button mb-3 "
-                onClick={handleSubmit(onSubmit)}
-              >
-                Login <CgLogIn />
-              </button>
               </div>
-              </div>
-            </div>
-
-          </div>
-        ) : null}
-      </form>
-      </CardBody>
-    </Card> */}
+            ) : null}
+          </form>
+        </CardBody>
+      </Card>
     </div>
   );
 };

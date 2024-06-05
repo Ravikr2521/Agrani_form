@@ -23434,7 +23434,7 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
   .login_icon {
     position: absolute;
     top: -2.5rem;
-    left: 10rem;
+    left: 10.5rem;
     background: #fbfbfb;
     padding: 12px 20px;
     border-radius: 44px;
@@ -23454,6 +23454,23 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
 }
 .text_box{
   margin-bottom: 0px;
+}
+label , Label{
+  margin-top: 5px !important;
+  margin-bottom: 0px !important;
+}
+.css-1dimb5e-singleValue {
+  grid-area: 1 / 1 / 2 / 3;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(51, 51, 51);
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-top: 12px !important;
+  box-sizing: border-box;
+  margin-bottom: 10px;
 }
 }
 

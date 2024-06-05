@@ -547,18 +547,18 @@ const CloudServiceTab = ({ urlid }) => {
           )}
         </>
         {login_token == "undefined" || login_token == null ? (
-         history.push("/login")
-          // <Modal
-          //   size="l"
-          //   isOpen={loginModal}
-          //   className="d-flex justify-content-center align-items-center vh-100"
-          // >
-          //   <div className=" thm-bg-primary">
-          //   </div>
-          //   <div className="">
-          //     <Login />
-          //   </div>
-          // </Modal>
+        //  history.push("/login")
+          <Modal
+            size="l"
+            isOpen={loginModal}
+            className="d-flex justify-content-center align-items-center vh-100"
+          >
+            <div className=" thm-bg-primary">
+            </div>
+            <div className="">
+              <Login />
+            </div>
+          </Modal>
         ) : (
           ""
         )}

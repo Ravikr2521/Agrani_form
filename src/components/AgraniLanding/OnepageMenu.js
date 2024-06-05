@@ -25,7 +25,7 @@ const OnepageMenu = ({ mClass, nClass, cClass, slogo, hbtnClass }) => {
       showConfirmButton: false,
       timer: 1000,
     });
-    history.push("/login")
+    // history.push("/login")
     window.location.reload()
     setLogoutButton(false)
     setLoginModal(true)
@@ -59,8 +59,16 @@ const OnepageMenu = ({ mClass, nClass, cClass, slogo, hbtnClass }) => {
                 height="35px"
               />
             </a>
+            {logoutbutton === true || user_token !== null ? <div
+              type="submit"
+              className="mx-2 text-center d-lg-none d-md-none d-block "
+             
+              onClick={(e) => handleLogout()}
+            >
+             <div className="d-flex"> <h5 className="m-0"><MdOutlineLogout /> </h5>  <h6  style={{color:"#f59d0e"}} className="mt-1"> Logout</h6> </div>
+            </div> : "" }
             <button
-              className="navbar-toggler collapsed"
+              className="navbar-toggler collapsed  d-none"
               type="button"
               data-toggle="collapse"
               data-target="#navbarSupportedContent"
@@ -82,7 +90,7 @@ const OnepageMenu = ({ mClass, nClass, cClass, slogo, hbtnClass }) => {
             </button>
 
             <div
-              className="collapse navbar-collapse"
+              className="collapse navbar-collapse d-lg-block d-md-block d-none"
               id="navbarSupportedContent"
             >
               <ul className={`navbar-nav menu ml-auto ${nClass}`}>
