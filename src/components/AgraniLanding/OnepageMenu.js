@@ -25,7 +25,7 @@ const OnepageMenu = ({ mClass, nClass, cClass, slogo, hbtnClass }) => {
       showConfirmButton: false,
       timer: 1000,
     });
-    history.push("/")
+    history.push("/login")
     window.location.reload()
     setLogoutButton(false)
     setLoginModal(true)
@@ -96,25 +96,22 @@ const OnepageMenu = ({ mClass, nClass, cClass, slogo, hbtnClass }) => {
                 </li>
               </ul>
               <a
-                className={`btn_get btn_hover ${hbtnClass}`}
+                className={`btn_get btn_hover d-lg-block d-md-block d-none ${hbtnClass}`}
                 href="tel:18001029232"
               >
                 <IoCall />
                 18001029232
               </a>
-            </div>
-            <div className="col-lg-1 mx-auto">
-       
-           {logoutbutton === true || user_token !== null ? <div
+              {logoutbutton === true || user_token !== null ? <div
               type="submit"
-              className="  mt-2 mx-3 text-center  d-lg-block d-md-none d-none"
+              className="  mt-lg-2 mb-lg-0 mb-3 mx-lg-3 mx-4 text-center  "
              
               onClick={(e) => handleLogout()}
             >
              <div className="d-flex"> <h5 className="m-0"><MdOutlineLogout /> </h5>  <h6  style={{color:"#f59d0e"}} className="mt-1"> Logout</h6> </div>
             </div> : "" }
-          
-        </div> 
+            </div>
+            
           </div>
         </nav>
       </header>

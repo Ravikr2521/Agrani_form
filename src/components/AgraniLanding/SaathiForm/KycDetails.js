@@ -462,7 +462,7 @@ const KycDetails = (data) => {
                       }}
                       options={MaritalStatusList}
                       placeholder={userDetails?.personal_details?.martialStatus || "Select Status"}
-                      className=""
+                      className="select_box"
                       styles={customStyles}
                     />
                   </div>
@@ -485,7 +485,7 @@ const KycDetails = (data) => {
                       }}
                       placeholder={userDetails?.personal_details?.occupation || "Select Occupation"}
                       options={OccupationListData}
-                      classNamePrefix="select2-selection"
+                      classNamePrefix="select_box"
                     />
                   </div>
                 </div>

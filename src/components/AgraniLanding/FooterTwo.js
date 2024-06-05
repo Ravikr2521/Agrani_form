@@ -23,7 +23,7 @@ class FooterTwo extends Component {
                         className=""
                       // data-wow-delay="0.2s"
                       >
-                        <a href="index.html" className="f-logo">
+                        <a href="/" className="f-logo">
                           <img
                             src={require("../../assets/image/logo/agrani-logo.png")}
                             height="40px"

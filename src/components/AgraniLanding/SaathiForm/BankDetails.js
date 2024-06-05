@@ -195,7 +195,7 @@ const BankDetails = (urlid) => {
                     value={
                       AccountType === undefined
                         ? AccountType
-                        : AccountType.label || userDetails?.bank_details?.account_type
+                        : AccountType.label 
                     }
                     onChange={(AccountType) => {
                       handleAccountType(AccountType.value);}}
