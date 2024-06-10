@@ -26,7 +26,7 @@ const OnepageMenu = ({ mClass, nClass, cClass, slogo, hbtnClass }) => {
       timer: 1000,
     });
     // history.push("/login")
-    window.location.reload()
+    window.location.reload()  
     setLogoutButton(false)
     setLoginModal(true)
     
