@@ -9,6 +9,7 @@ import SaathiPreview from "./Pages/SaathiPreview";
 import Existinguser from "./components/AgraniLanding/SaathiForm/PreviewPage/Existinguser";
 import UserPreview from "./components/AgraniLanding/SaathiForm/UserPreview";
 import Login from "./components/AgraniLanding/Login";
+import DeleteApplication from "./Pages/DeleteApplication";
 
 
 class App extends Component {
@@ -27,6 +28,8 @@ class App extends Component {
           <ScrollToTopRoute path="/Existinguser" component={Existinguser} />
           <ScrollToTopRoute path="/UserPreview" component={UserPreview} />
           {/* <ScrollToTopRoute path="/login" component={Login} /> */}
+          <ScrollToTopRoute path="/delete" component={DeleteApplication} />
+
          
          
           
