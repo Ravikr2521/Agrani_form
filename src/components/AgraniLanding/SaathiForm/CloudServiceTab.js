@@ -31,7 +31,7 @@ const CloudServiceTab = ({ urlid }) => {
     corporate,
     SetCorporate,
     loginModal,
-    userDetails
+    userDetails,
   } = CryptoState();
   // console.log(userDetails , "userDetails")
   const history = useHistory();
@@ -41,7 +41,7 @@ const CloudServiceTab = ({ urlid }) => {
   const [checked, setChecked] = useState(userDetails?.is_agreed);
   const [downloadUrl, setdownloadUrl] = useState("");
   const [Verify, setVerify] = useState(false);
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
   const verifyFunction = (e) => {
     setVerify(true);
   };
@@ -67,7 +67,7 @@ const CloudServiceTab = ({ urlid }) => {
 
   const onSubmit = () => {
     SetCorporate(true);
-    setLoading(true)
+    setLoading(true);
     let user_token = localStorage.getItem("token");
     var id = localStorage.getItem("user-info-id");
 
@@ -76,7 +76,7 @@ const CloudServiceTab = ({ urlid }) => {
     formdata.append("applicant_id", id);
     formdata.append("created_by", "0");
     // formdata.append("created_by_name", "Self");
-    
+
     var requestOptions = {
       method: "PUT",
       body: formdata,
@@ -87,13 +87,11 @@ const CloudServiceTab = ({ urlid }) => {
       .then((r) => r.json())
 
       .then((result) => {
-
         if ("detail" in result) {
           Swal.fire("Please Fill your Application in sequence");
           history.push("/");
-          setLoading(false)
+          setLoading(false);
           return;
-          
         } else if (result.status == 200) {
           Swal.fire({
             icon: "success",
@@ -105,20 +103,21 @@ const CloudServiceTab = ({ urlid }) => {
           });
           setdownloadUrl(result.data.empanelment_form_url);
           verifyFunction(true);
-          setLoading(false)
+          setLoading(false);
           document.getElementById("submitbutton").disabled = true;
-        } else{
+        } else {
           Swal.fire(result.message);
-          setLoading(false)
+          setLoading(false);
         }
-         
-      }).catch((error)=>{
-        Swal.fire({icon: "warning",
-        title:"Server is not responding", timer:1500},);
-        setLoading(false)
-      }
-
-      )
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "warning",
+          title: "Server is not responding",
+          timer: 1500,
+        });
+        setLoading(false);
+      });
   };
 
   // for navigation
@@ -397,31 +396,39 @@ const CloudServiceTab = ({ urlid }) => {
                                 className="btn_three mr-2 mt-2 mb-4"
                                 onClick={handleSubmit(onSubmit)}
                               >
-                                Submit Application 
-                                &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
+                                Submit Application &nbsp;{" "}
+                                {loading ? <Spinner size="sm"></Spinner> : ""}
                               </button>
 
                               {Verify == true ? (
                                 <>
-                                 <button
-                              type="button"
-                              className="btn_three mr-2 mt-2 dbtnclr"
-                              onClick={handleClick}
-                            >
-                              <a href={downloadUrl} >
-                                Download Form <FaDownload />
-                              </a>
-                            </button>
+                                  <button
+                                    type="button"
+                                    className="btn_three mr-2 mt-2 dbtnclr"
+                                    onClick={handleClick}
+                                  >
+                                    <a href={downloadUrl}>
+                                      Download Form <FaDownload />
+                                    </a>
+                                  </button>
                                 </>
                               ) : null}
                             </div>
                           </div>
                         </form>
-{/* {console.log(userDetails.is_agreed ,userDetails?.is_attached_by_agent ,userDetails?.onboarding_status !== "QC1 Approved")} */}
+                        {/* {console.log(userDetails.is_agreed ,userDetails?.is_attached_by_agent ,userDetails?.onboarding_status !== "QC1 Approved")} */}
 
                         <div>
-                        {userDetails && userDetails.is_agreed !== false && userDetails?.is_attached_by_agent !== false && (userDetails?.onboarding_status !== "QC1 Approved" ? false : true) ? "" : <UploadSignedDoc/>}
-
+                          {userDetails &&
+                          userDetails.is_agreed !== false &&
+                          userDetails?.is_attached_by_agent !== false &&
+                          (userDetails?.onboarding_status !== "QC1 Approved"
+                            ? false
+                            : true) ? (
+                            ""
+                          ) : (
+                            <UploadSignedDoc />
+                          )}
                         </div>
                       </div>
                     </div>
@@ -434,7 +441,7 @@ const CloudServiceTab = ({ urlid }) => {
                   id="myTab"
                   role="tablist"
                 >
-                  <li className="nav-item">
+                  <li className="nav-item cursor">
                     <span
                       className={`nav-link ${
                         urlid == undefined ||
@@ -454,7 +461,7 @@ const CloudServiceTab = ({ urlid }) => {
                       Personal Details
                     </span>
                   </li>
-                  <li className="nav-item">
+                  <li className="nav-item cursor">
                     <span
                       className={`nav-link ${urlid == 1 ? "active" : ""}`}
                       id="KycDetails"
@@ -468,7 +475,7 @@ const CloudServiceTab = ({ urlid }) => {
                       KYC Details
                     </span>
                   </li>
-                  <li className="nav-item">
+                  <li className="nav-item cursor">
                     <span
                       className={`nav-link ${urlid == 2 ? "active" : ""}`}
                       id="EducationDetails"
@@ -547,14 +554,13 @@ const CloudServiceTab = ({ urlid }) => {
           )}
         </>
         {login_token == "undefined" || login_token == null ? (
-        //  history.push("/login")
+          //  history.push("/login")
           <Modal
             size="l"
+            centered={true}
             isOpen={loginModal}
-            className="d-flex justify-content-center align-items-center vh-100"
+            className="d-flex justify-content-center align-items-center "
           >
-            <div className=" thm-bg-primary">
-            </div>
             <div className="">
               <Login />
             </div>

@@ -8,7 +8,7 @@ import AppWork from "../components/AgraniLanding/AppWork";
 import ScreenshowCase from "../components/AgraniLanding/ScreenshowCase";
 import AppGetstarted from "../components/AgraniLanding/AppGetstarted";
 import FooterTwo from "../components/AgraniLanding/FooterTwo";
-import ServiceData from '../components/AgraniLanding/ServiceData';
+import ServiceData from "../components/AgraniLanding/ServiceData";
 import FooterData from "../components/Footer/FooterData";
 import AboutLeadsConnect from "../components/AgraniLanding/AboutLeadsConnect";
 import StartupFeatures from "../components/AgraniLanding/StartupFeatures";
@@ -32,6 +32,18 @@ const Home = () => {
       <ScreenshowCase />
       <AppGetstarted />
       <FooterTwo FooterData={FooterData} />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };

@@ -5,14 +5,14 @@ import Swal from "sweetalert2";
 import { CryptoState } from "../../FarmerContext";
 import { Spinner } from "react-bootstrap";
 
-const PersonalDetails = (data) => {
+const PersonalDetails = () => {
   // console.clear()
   const { setPersonal, SetCorporate, setCompletedSection, userDetails } =
     CryptoState();
   var Api_Url = process.env.REACT_APP_API_URL;
   let user_token = localStorage.getItem("token");
   const User_Mobile = localStorage.getItem("phone_number");
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -21,16 +21,9 @@ const PersonalDetails = (data) => {
   } = useForm({ mode: "onChange" });
 
   const applicaintId = localStorage.getItem("user-info-id");
-  const [Verify, setVerify] = useState(false);
-  const [noVerified, setnoVerified] = useState(false);
-
-  const verifyFunction = (e) => {
-    setVerify(true);
-  };
 
   // OTP Function
   const [phoneNumber, setPhoneNumber] = useState();
-  const [otp, setOtp] = useState("");
 
   const [userData, setUserData] = useState();
 
@@ -53,16 +46,15 @@ const PersonalDetails = (data) => {
   }
   const personal_detail = localStorage.getItem("personal_detail");
 
-
-
   function sendData(data) {
-    setLoading(true)
+    setLoading(true);
     var jsonData = {
       individuals: data.LegalEntityType,
       firstName: data.firstName || userDetails?.firstName,
       lastName: data.lastName || userDetails?.lastName,
       phoneNumber: User_Mobile,
-      alternatePhoneNumber: data.alternatePhoneNumber || userDetails?.personal_detail?.email,
+      alternatePhoneNumber:
+        data.alternatePhoneNumber || userDetails?.personal_detail?.email,
       email: data.email || userDetails?.email,
       ui_section_id: "1",
       created_by: "0",
@@ -89,7 +81,6 @@ const PersonalDetails = (data) => {
     fetch(apiUrl, requestOptions)
       .then((r) => r.json())
       .then((result) => {
-    
         var applicaintId = result.data.applicant_id;
         console.log(applicaintId, "id");
         localStorage.setItem("applicant_id", result?.data?.applicant_id);
@@ -102,27 +93,25 @@ const PersonalDetails = (data) => {
           });
           setPersonal(true);
           setCompletedSection("1");
-          setLoading(false)
-         if(result.status === 201){
-          localStorage.setItem(
-            "personal_detail",
-            result?.data?.is_personal_details
-          );
-         }
-        } else{
+          setLoading(false);
+          if (result.status === 201) {
+            localStorage.setItem(
+              "personal_detail",
+              result?.data?.is_personal_details
+            );
+          }
+        } else {
           Swal.fire({
             icon: "warning",
             title: result.message,
             timer: 3000,
           });
-          setLoading(false)
+          setLoading(false);
         }
 
         // if(result.status===200) {
         // document.getElementById("save_btn").disabled=true }
-      })
-
-
+      });
   }
 
   const onSubmit = (data) => {
@@ -203,15 +192,14 @@ const PersonalDetails = (data) => {
   //     });
   // }
 
-
   return (
     <>
       <section className="sign_in_area col-lg-12">
         <div className="px-4">
           <div className="login_info pl-0">
             <h2 className="f_p f_600 f_size_24 t_color3 mb_40 mt_20 text-center">
-              Fill the Personal Details in
-              <span className="f_700"> Application</span>
+              Fill the <span className="f_700 orange">Personal Details</span> in
+              Application
             </h2>
             <div className="formdetails">
               <form action="#" className=" login-form sign-in-form">
@@ -267,14 +255,12 @@ const PersonalDetails = (data) => {
                       placeholder="Enter First Name"
                       defaultValue={userDetails ? userDetails?.firstName : ""}
                       required={userDetails?.firstName ? false : true}
-                      {...register("firstName", {
-                      })}
+                      {...register("firstName", {})}
                     />
                     {errors.firstName && (
                       <p className="m input-error ">Please enter first name</p>
                     )}
                   </div>
-
                   <div className="col-lg-6 form-group text_box">
                     <label className="f_p text_c f_400 m-0 mb-1">
                       Last Name <small style={{ color: "#ff0000" }}>*</small>
@@ -297,7 +283,6 @@ const PersonalDetails = (data) => {
                       <p className="m input-error">Please enter last name</p>
                     )}
                   </div>
-
                   {/* <div className=" col-lg-4 form-group text_box">
                     <label className="f_p text_c f_400">
                       Phone Number <small style={{ color: "#ff0000" }}>*</small>
@@ -408,7 +393,10 @@ const PersonalDetails = (data) => {
                       name="alternatePhoneNumber"
                       type="number"
                       placeholder="Enter Alternate Phone Number"
-                      defaultValue={userDetails?.personal_detail?.alternatePhoneNumber || ""}
+                      defaultValue={
+                        userDetails?.personal_details?.alternatePhoneNumber ||
+                        ""
+                      }
                       {...register("alternatePhoneNumber", {
                         minLength: 10,
                         maxLength: 10,
@@ -418,7 +406,6 @@ const PersonalDetails = (data) => {
                       <p className="m input-error">Please enter valid No</p>
                     )}
                   </div>
-
                   <div className="col-lg-6 form-group text_box">
                     <label className="f_p text_c f_400 m-0 mb-1">
                       Email ID
@@ -446,10 +433,8 @@ const PersonalDetails = (data) => {
                     id="save_btn"
                     onClick={handleSubmit(onSubmit)}
                   >
-                    {personal_detail == "false" 
-                      ? "Save"
-                      : "Update"}
-                      &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
+                    {personal_detail == "false" ? "Save" : "Update"}
+                    &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
                   </button>
                 </div>
               </form>

@@ -1,20 +1,15 @@
 import React, { useEffect } from "react";
-import Sticky from "react-stickynode";
 import { IoCall } from "react-icons/io5";
-import { MdEmail } from "react-icons/md";
-import { Link, useHistory } from "react-router-dom";
-import { MdOutlineLogout } from "react-icons/md";
-import { CryptoState } from "../FarmerContext";
+import { MdEmail, MdOutlineLogout } from "react-icons/md";
+import { useHistory } from "react-router-dom";
+import Sticky from "react-stickynode";
 import Swal from "sweetalert2";
+import { CryptoState } from "../FarmerContext";
 
 const OnepageMenu = ({ mClass, nClass, cClass, slogo, hbtnClass }) => {
-
-
-  const {
-    logoutbutton,setLogoutButton,setLoginModal
-  } = CryptoState();
+  const { logoutbutton, setLogoutButton, setLoginModal } = CryptoState();
   var id = localStorage.getItem("user-info-id");
-  const user_token= localStorage.getItem("token")
+  const user_token = localStorage.getItem("token");
 
   const history = useHistory();
   function handleLogout() {
@@ -26,21 +21,18 @@ const OnepageMenu = ({ mClass, nClass, cClass, slogo, hbtnClass }) => {
       timer: 1000,
     });
     // history.push("/login")
-    window.location.reload()
-    setLogoutButton(false)
-    setLoginModal(true)
-    
+    window.location.reload();
+    setLogoutButton(false);
+    setLoginModal(true);
+
     return;
   }
 
-
-  useEffect(()=>{
-    if(user_token){
-      setLogoutButton(true)
+  useEffect(() => {
+    if (user_token) {
+      setLogoutButton(true);
     }
-  
-
-  },[])
+  }, []);
 
   return (
     <Sticky top={0} innerZ={9999} activeClass="navbar_fixed">
@@ -59,14 +51,26 @@ const OnepageMenu = ({ mClass, nClass, cClass, slogo, hbtnClass }) => {
                 height="35px"
               />
             </a>
-            {logoutbutton === true || user_token !== null ? <div
-              type="submit"
-              className="mx-2 text-center d-lg-none d-md-none d-block "
-             
-              onClick={(e) => handleLogout()}
-            >
-             <div className="d-flex"> <h5 className="m-0"><MdOutlineLogout /> </h5>  <h6  style={{color:"#f59d0e"}} className="mt-1"> Logout</h6> </div>
-            </div> : "" }
+            {logoutbutton === true || user_token !== null ? (
+              <div
+                type="submit"
+                className="mx-2 text-center d-lg-none d-md-none d-block "
+                onClick={(e) => handleLogout()}
+              >
+                <div className="d-flex">
+                  {" "}
+                  <h5 className="m-0">
+                    <MdOutlineLogout />{" "}
+                  </h5>{" "}
+                  <h6 style={{ color: "#f59d0e" }} className="mt-1">
+                    {" "}
+                    Logout
+                  </h6>{" "}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
             <button
               className="navbar-toggler collapsed  d-none"
               type="button"
@@ -104,22 +108,33 @@ const OnepageMenu = ({ mClass, nClass, cClass, slogo, hbtnClass }) => {
                 </li>
               </ul>
               <a
-                className={`btn_get btn_hover d-lg-block d-md-block d-none ${hbtnClass}`}
+                className={`btn_get btn_hover  d-lg-block d-md-block d-none ${hbtnClass}`}
                 href="tel:18001029232"
               >
-                <IoCall />
+                <IoCall className="mx-1" />
                 18001029232
               </a>
-              {logoutbutton === true || user_token !== null ? <div
-              type="submit"
-              className="  mt-lg-2 mb-lg-0 mb-3 mx-lg-3 mx-4 text-center  "
-             
-              onClick={(e) => handleLogout()}
-            >
-             <div className="d-flex"> <h5 className="m-0"><MdOutlineLogout /> </h5>  <h6  style={{color:"#f59d0e"}} className="mt-1"> Logout</h6> </div>
-            </div> : "" }
+              {logoutbutton === true || user_token !== null ? (
+                <div
+                  type="submit"
+                  className="  mt-lg-2 mb-lg-0 mb-3 mx-lg-3 mx-4 text-center  "
+                  onClick={(e) => handleLogout()}
+                >
+                  <div className="d-flex">
+                    {" "}
+                    <h5 className="m-0">
+                      <MdOutlineLogout />{" "}
+                    </h5>{" "}
+                    <h6 style={{ color: "#f59d0e" }} className="mt-1">
+                      {" "}
+                      Logout
+                    </h6>{" "}
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
-            
           </div>
         </nav>
       </header>

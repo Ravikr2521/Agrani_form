@@ -1,34 +1,19 @@
 import React, { useEffect, useState } from "react";
-//Import Flatepicker
-import "flatpickr/dist/themes/confetti.css";
+import { Spinner } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 import Select from "react-select";
 import Swal from "sweetalert2";
-import { useForm } from "react-hook-form";
-import { SaathiService } from "../../../service/saathi.service";
 import FarmerContext, { CryptoState } from "../../FarmerContext";
-import { useHistory } from "react-router-dom";
-import swal from "sweetalert";
-import { Spinner } from "react-bootstrap";
 
-
-const EducationDetails = ({ urlid }) => {
-  // console.clear()
+const EducationDetails = () => {
   const history = useHistory();
-  const { setEducation, SetCorporate, setCompletedSection, userDetails } =
+  const { setEducation, SetCorporate, userDetails, dropdownData } =
     CryptoState();
   const [loading, setLoading] = useState(false);
 
   var Api_Url = process.env.REACT_APP_API_URL;
-  // console.log(userDetails , "userDetails")
-
-  const [Qualificationlist, setQualificationlist] = useState({});
-  useEffect(() => {
-    SaathiService.getBulkData()
-      .then((data) => setQualificationlist(data))
-      .catch((error) => {
-        console.warn("Not data fetch :(");
-      });
-  }, []);
+  const MasterDropDown = dropdownData?.data?.results[0];
 
   const [Qualification, setQualification] = useState([]);
   function handleQualification(Qualification) {
@@ -36,15 +21,14 @@ const EducationDetails = ({ urlid }) => {
     SetChangeEvent(Qualification);
   }
 
-  // Qualification selectbox
   const QualificationListData = [
     {
       label: "Document",
       options:
-        Qualificationlist.data &&
-        Qualificationlist.data.qualification.map((qlf) => ({
-          label: `${qlf.qualification}`,
-          value: `${qlf.id}`,
+        MasterDropDown &&
+        MasterDropDown.education?.map((qlf) => ({
+          label: `${qlf}`,
+          value: `${qlf}`,
         })),
     },
   ];
@@ -55,20 +39,17 @@ const EducationDetails = ({ urlid }) => {
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
-  const [userData, setUserData] = useState();
   const [get, setData] = useState([]);
   const [changeEvent, SetChangeEvent] = useState(null);
 
   const onSubmit = (data) => {
-    setLoading(true)
+    setLoading(true);
     SetCorporate(true);
     let user_token = localStorage.getItem("token");
-    console.log(user_token, "token ");
 
     localStorage.setItem("userDetail", JSON.stringify(data));
     var userId = localStorage.getItem("user-info-id");
     console.log(userId);
-    setUserData(data);
 
     var formdata = new FormData();
     formdata.append("highest_qualification", Qualification);
@@ -103,23 +84,22 @@ const EducationDetails = ({ urlid }) => {
             timer: 1500,
           });
           setEducation(true);
-          setLoading(false)
+          setLoading(false);
         } else {
           Swal.fire({
             icon: "warning",
             title: result?.message,
             timer: 3000,
           });
-          setLoading(false)
+          setLoading(false);
         }
-      
+
         if ("detail" in result) {
           Swal.fire("Please Fill your Application");
           history.push("/");
           return;
         }
-      })
-
+      });
   };
 
   useEffect(() => {
@@ -140,8 +120,8 @@ const EducationDetails = ({ urlid }) => {
         <div className="px-5 mb-5 pb-5">
           <div className="login_info pl-0">
             <h2 className="f_p f_600 f_size_24 t_color3 mb_40 mt_20 text-center">
-              Fill the Education Details in
-              <span className="f_700"> Application</span>
+              Fill the <span className="f_700 orange">Education Details</span>{" "}
+              in Application
             </h2>
             <div className="">
               <form

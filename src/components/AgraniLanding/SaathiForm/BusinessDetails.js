@@ -1,50 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 //Import Flatepicker
 import "flatpickr/dist/themes/confetti.css";
-import Select from "react-select";
-import { useForm } from 'react-hook-form';
-import Swal from 'sweetalert2'
-import { SaathiService } from "../../../service/saathi.service";
-import { CryptoState } from "../../FarmerContext";
-import { useHistory } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import Select from "react-select";
+import Swal from "sweetalert2";
+import { CryptoState } from "../../FarmerContext";
 
 const BusinessDetails = () => {
-  
-  var Api_Url =process.env.REACT_APP_API_URL
-  // console.clear()
-  const history=useHistory()
-  const {setBusiness,SetCorporate,userDetails}=CryptoState()
-  const [Bulkdata, setBulkdata] = useState({});
-  const [loading,setLoading]=useState(false)
-  useEffect(() => {
-    SaathiService.getBulkData().then((data) => setBulkdata(data))
-      .catch(error => {
-        console.warn("Not data fetch :(")
-      });
-  }, []);
+  var Api_Url = process.env.REACT_APP_API_URL;
+
+  const history = useHistory();
+  const { setBusiness, SetCorporate, userDetails, dropdownData } =
+    CryptoState();
+  const MasterDropDown = dropdownData?.data?.results[0];
+
+  const [loading, setLoading] = useState(false);
+
   const [IncomeSource, setIncomeSource] = useState([]);
   function handleIncomeSource(IncomeSource) {
     setIncomeSource(IncomeSource);
-    
   }
-  // Occupation selectbox
+
   const IncomeListData = [
     {
       label: "Income Source",
       options:
-        Bulkdata.data &&
-        Bulkdata.data.income_data.map((Income) => ({
-          label: `${Income.income_source}`,
-          value: `${Income.id}`,
+        MasterDropDown &&
+        MasterDropDown?.income_type.map((Income) => ({
+          label: `${Income}`,
+          value: `${Income}`,
         })),
     },
   ];
 
-  const [SoldInsBankproduct, setSoldInsBankproduct] = useState([]);
-  function handelSoldInsBankproduct(SoldInsBankproduct) {
-    setSoldInsBankproduct(SoldInsBankproduct);
-  }
   const [professionaltraining, setprofessionaltraining] = useState([]);
   function handelprofessionaltraining(professionaltraining) {
     setprofessionaltraining(professionaltraining);
@@ -60,56 +50,70 @@ const BusinessDetails = () => {
     },
   ];
 
-  const [userData, setUserData] = useState()
-
-  const { register, handleSubmit,} = useForm({mode: "onChange",})
+  const { register, handleSubmit } = useForm({ mode: "onChange" });
 
   const onSubmit = (data) => {
-    SetCorporate(true)
-    setLoading(true)
+    SetCorporate(true);
+    setLoading(true);
 
-    localStorage.setItem("userDetail", JSON.stringify(data))
-    let user_token = localStorage.getItem("token")
-    var userId = localStorage.getItem("user-info-id")
-    setUserData(data)
+    localStorage.setItem("userDetail", JSON.stringify(data));
+    let user_token = localStorage.getItem("token");
+    var userId = localStorage.getItem("user-info-id");
 
     var formdata = new FormData();
-    var temp = [data.experience_in_insurance, data.experience_in_banking, data.experience_in_agrani_input, data.experience_in_agrani_output]
+    var temp = [
+      data.experience_in_insurance,
+      data.experience_in_banking,
+      data.experience_in_agrani_input,
+      data.experience_in_agrani_output,
+    ];
 
     if (temp.indexOf(true) == -1) {
       Swal.fire({
         icon: "warning",
         title: "please select atleast one Experience",
         timer: 3000,
-      })
+      });
     } else {
       formdata.append("source_of_income", IncomeSource);
-      formdata.append("income", data.income || userDetails?.business_details?.income);
+      formdata.append(
+        "income",
+        data.income || userDetails?.business_details?.income
+      );
       formdata.append("experience_in_insurance", data.experience_in_insurance);
       formdata.append("experience_in_banking", data.experience_in_banking);
-      formdata.append("experience_in_agrani_input", data.experience_in_agrani_input);
-      formdata.append("experience_in_agrani_output", data.experience_in_agrani_output);
-      formdata.append("is_professional_training_insurance_and_bank_product", professionaltraining);
+      formdata.append(
+        "experience_in_agrani_input",
+        data.experience_in_agrani_input
+      );
+      formdata.append(
+        "experience_in_agrani_output",
+        data.experience_in_agrani_output
+      );
+      formdata.append(
+        "is_professional_training_insurance_and_bank_product",
+        professionaltraining
+      );
       formdata.append("interest_in_selling", data.interest_in_selling);
       formdata.append("applicant_id", userId);
       formdata.append("ui_section_id", "6");
       formdata.append("created_by_name", "Self");
       formdata.append("created_by", "0");
 
-      for (var pair of formdata.entries()) {   
-        console.log(pair[0] + ', ' + pair[1]);    
-      }   
+      for (var pair of formdata.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+      }
 
       var requestOptions = {
-        method: 'POST',
+        method: "POST",
         body: formdata,
-        redirect: 'follow',
-        headers: { Authentication: `Token ${user_token}`}
+        redirect: "follow",
+        headers: { Authentication: `Token ${user_token}` },
       };
 
       fetch(`${Api_Url}/api/business-details/`, requestOptions)
-        .then(r => r.json())
-        .then(result => {
+        .then((r) => r.json())
+        .then((result) => {
           if (result.status === 200 || result.status === 201) {
             Swal.fire({
               icon: "success",
@@ -117,7 +121,7 @@ const BusinessDetails = () => {
               timer: 1500,
             });
             setBusiness(true);
-            setLoading(false)
+            setLoading(false);
           } else {
             Swal.fire({
               icon: "warning",
@@ -125,69 +129,71 @@ const BusinessDetails = () => {
               buttons: false,
               timer: 3000,
             });
-            setLoading(false)
+            setLoading(false);
           }
-        
-          if ('detail' in result) {
+
+          if ("detail" in result) {
             Swal.fire("Please Fill your Application");
             history.push("/");
             return;
           }
-        })
-        
-    };
-  }
+        });
+    }
+  };
   return (
     <section className="sign_in_area col-lg-12">
       <div className="px-5">
         <div className="login_info pl-0">
           <h2 className="f_p f_600 f_size_24 t_color3 mb_40 mt_20 text-center">
-            Fill the Business Details in
-            <span className="f_700"> Application </span>
+            Fill the <span className="f_700 orange">Business Details</span> in
+            Application
           </h2>
           <div className="">
-            
-          <form action="#" className="login-form sign-in-form" onSubmit={handleSubmit(onSubmit)}>
-            <div className="row">
-              <div className="col-lg-6 form-group text_box">
-                <div className="mb-3">
+            <form
+              action="#"
+              className="login-form sign-in-form"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <div className="row">
+                <div className="col-lg-6 form-group text_box">
+                  <div className="mb-3">
+                    <label className="f_p text_c f_400">
+                      Select Primary Source of Income{" "}
+                      <small style={{ color: "#ff0000" }}>*</small>
+                    </label>
+                    <Select
+                      {...register("source_of_income")}
+                      value={
+                        IncomeListData === undefined
+                          ? IncomeSource
+                          : IncomeSource.label
+                      }
+                      onChange={(IncomeSource) => {
+                        handleIncomeSource(IncomeSource.label);
+                      }}
+                      options={IncomeListData}
+                      classNamePrefix="select2-selection"
+                      // placeholder={userDetails?.business_details?.income_source}
+                    />
+                  </div>
+                </div>
+
+                <div className="col-lg-6 form-group text_box">
                   <label className="f_p text_c f_400">
-                    Select Primary Source of Income <small style={{color:"#ff0000"}}>*</small>
+                    Anual Income
+                    <small style={{ color: "#ff0000" }}>*</small>
                   </label>
-                  <Select
-                  {...register("source_of_income")}
-                    value={
-                      IncomeListData === undefined
-                        ? IncomeSource
-                        : IncomeSource.label
-                    }
-                    onChange={(IncomeSource) => {
-                      handleIncomeSource(IncomeSource.label);
-                     
-                    }}
-                    options={IncomeListData}
-                    classNamePrefix="select2-selection"
-                    // placeholder={userDetails?.business_details?.income_source}
+                  <input
+                    name="income"
+                    type="text"
+                    placeholder="Enter income"
+                    required
+                    {...register("income")}
+                    defaultValue={userDetails?.business_details?.income}
                   />
                 </div>
-              </div>
 
-              <div className="col-lg-6 form-group text_box">
-                <label className="f_p text_c f_400">Anual Income
-                <small style={{color:"#ff0000"}}>*</small></label>
-                <input
-                  name="income"
-                  type="text"
-                  placeholder="Enter income"
-                  required
-                  {...register("income")}
-                  defaultValue={userDetails?.business_details?.income}
-                />
-              </div>
-              
-
-
-              <div className="col-lg-12 form-group mb-4">
+                <div className="col-lg-12 form-group mb-4">
                   <label className="f_p text_c f_400">Experience in : </label>
 
                   <div className="col-lg-7 form-check text_box d-flex flex-lg-row flex-column justify-content-between  ">
@@ -204,20 +210,18 @@ const BusinessDetails = () => {
                       </label>
                     </div>
 
-
                     <div className="form-check">
                       <input
                         {...register("experience_in_banking")}
                         className="form-check-input mt-2"
                         type="checkbox"
-                        name='experience_in_banking'
+                        name="experience_in_banking"
                       />
                       <label className="form-check-label" htmlFor="Yes">
                         Banking
                       </label>
                     </div>
 
-                  
                     <div className="form-check">
                       <input
                         {...register("experience_in_agrani_input")}
@@ -231,14 +235,12 @@ const BusinessDetails = () => {
                       </label>
                     </div>
 
-
                     <div className="form-check">
                       <input
                         {...register("experience_in_agrani_output")}
                         className="form-check-input mt-2"
                         type="checkbox"
                         name="experience_in_agrani_output"
-
                       />
                       <label className="form-check-label" htmlFor="Yes">
                         Agri output
@@ -247,35 +249,36 @@ const BusinessDetails = () => {
                   </div>
                 </div>
 
-
-              <div className="col-lg-12 form-group text_box">
-                <div className="mb-3">
-                  <label className="f_p text_c f_400">
-                    Have you taken professional training for insurance or
-                    banking products <small style={{color:"#ff0000"}}>*</small>
-                  </label>
-                  <Select
-               
-                  {...register("is_professional_training_insurance_and_bank_product")}
-                    value={
-                      professionaltraining === undefined
-                        ? professionaltraining
-                        : professionaltraining.label
-                    }
-                    onChange={(professionaltraining) => {
-                      handelprofessionaltraining(professionaltraining.value);
-                    }}
-                    options={PlicyData}
-                    classNamePrefix="select2-selection"
-                    // placeholder={userDetails?.business_details?.is_professional_training_insurance_and_bank_product === false ? "No" : "Yes"}
-                  />
+                <div className="col-lg-12 form-group text_box">
+                  <div className="mb-3">
+                    <label className="f_p text_c f_400">
+                      Have you taken professional training for insurance or
+                      banking products{" "}
+                      <small style={{ color: "#ff0000" }}>*</small>
+                    </label>
+                    <Select
+                      {...register(
+                        "is_professional_training_insurance_and_bank_product"
+                      )}
+                      value={
+                        professionaltraining === undefined
+                          ? professionaltraining
+                          : professionaltraining.label
+                      }
+                      onChange={(professionaltraining) => {
+                        handelprofessionaltraining(professionaltraining.value);
+                      }}
+                      options={PlicyData}
+                      classNamePrefix="select2-selection"
+                      // placeholder={userDetails?.business_details?.is_professional_training_insurance_and_bank_product === false ? "No" : "Yes"}
+                    />
+                  </div>
                 </div>
-              </div>
 
-             
                 <div className="col-lg-12 form-check text_box">
                   <label className="f_p text_c f_400">
-                    You are interested in selling <small style={{color:"#ff0000"}}>*</small>
+                    You are interested in selling{" "}
+                    <small style={{ color: "#ff0000" }}>*</small>
                   </label>
                   <div className="col-lg-12 p-0">
                     <div className="form-check form-check-inline">
@@ -298,7 +301,6 @@ const BusinessDetails = () => {
                     <div className="form-check form-check-inline">
                       <input
                         {...register("interest_in_selling")}
-
                         name="interestedinselling"
                         type="radio"
                         value="BankingProducts"
@@ -331,19 +333,13 @@ const BusinessDetails = () => {
                   </div>
                 </div>
 
-               
-                  <div className="col-lg-4 m-auto pb-5 justify-content-center text-center">
-                    <button type="submit" className="saved_btn" >
-                    {userDetails?.business_details === null 
-                      ? "Save"
-                      : "Update"}
-                       &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
-                    </button>
-                  </div>
-
-               
+                <div className="col-lg-4 m-auto pb-5 justify-content-center text-center">
+                  <button type="submit" className="saved_btn">
+                    {userDetails?.business_details === null ? "Save" : "Update"}
+                    &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
+                  </button>
+                </div>
               </div>
-
             </form>
           </div>
         </div>

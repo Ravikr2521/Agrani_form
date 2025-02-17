@@ -6,17 +6,20 @@ import { SaathiService } from "../../../service/saathi.service";
 import { CryptoState } from "../../FarmerContext";
 import { Spinner } from "react-bootstrap";
 
-const KycDetails = (data) => {
-  const { setKycDetail, SetCorporate, setCompletedSection, userDetails } =
-    CryptoState();
+const KycDetails = () => {
+  const {
+    setKycDetail,
+    SetCorporate,
+    setCompletedSection,
+    userDetails,
+    dropdownData,
+  } = CryptoState();
   const Api_Url = process.env.REACT_APP_API_URL;
   const [date, setDate] = useState();
   const [MaritalStatus, setMaritalStatus] = useState();
-  const [OccupationList, setOccupationList] = useState([]);
   const [OccupationName, setOccupationName] = useState("");
   const [Relationship, setRelationship] = useState();
-  const [RelationList, setRelationList] = useState([]);
-  const [OccupationId, setOccupationId] = useState("");
+  // const [OccupationId, setOccupationId] = useState("");
   const [OtherDocName, setOtherDocName] = useState([]);
   const [StatesCode, setStatesCode] = useState(null);
   const [StateName, setStateName] = useState(null);
@@ -29,35 +32,15 @@ const KycDetails = (data) => {
   const [statedatalist, setstatedatalist] = useState({});
   const [changeEvent, SetChangeEvent] = useState(null);
   const [isDisabled, setIsDisabled] = useState(null);
-  const [loading,setLoading]=useState(false)
-  const [loader,setLoader]=useState(false)
+  const [loading, setLoading] = useState(false);
+  const [loader, setLoader] = useState(false);
 
-
+  const MasterDropDown = dropdownData?.data?.results[0];
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: "onChange" });
-
-  useEffect(() => {
-    // Bulk Api
-    SaathiService.getBulkData()
-      .then((data) => {
-        setRelationList(data);
-      })
-      .catch((error) => {
-        console.warn("Not good data fetch :(");
-      });
-
-    // Occupation api
-    SaathiService.getOccupationData()
-      .then((data) => {
-        setOccupationList(data);
-      })
-      .catch((error) => {
-        console.warn("Not good data fetch :(");
-      });
-  }, []);
 
   const customStyles = {
     control: (base) => ({
@@ -66,13 +49,14 @@ const KycDetails = (data) => {
       minHeight: 20,
     }),
   };
+  // console.log(statedatalist, "kikiki");
 
   const optionStatesCode = [
     {
       label: "State",
       options:
-        statedatalist.data &&
-        statedatalist.data.map((state) => ({
+        statedatalist?.data &&
+        statedatalist?.data?.results?.map((state) => ({
           label: `${state.state_name}`,
           value: `${state.state_code}`,
         })),
@@ -82,10 +66,10 @@ const KycDetails = (data) => {
     {
       label: "District",
       options:
-        DistrictList.data &&
-        DistrictList.data.map((district) => ({
-          label: `${district.level_3_name}`,
-          value: `${district.level_3_code}`,
+        DistrictList?.data &&
+        DistrictList?.data?.results?.map((district) => ({
+          label: `${district.district_name}`,
+          value: `${district.district_code}`,
         })),
     },
   ];
@@ -93,10 +77,21 @@ const KycDetails = (data) => {
     {
       label: "Block",
       options:
-        BlockList.data &&
-        BlockList.data.map((district) => ({
-          label: `${district.level_4_name}`,
-          value: `${district.level_4_code}`,
+        BlockList?.data &&
+        BlockList?.data?.results?.map((block) => ({
+          label: `${block.block_name}`,
+          value: `${block.block_code}`,
+        })),
+    },
+  ];
+  const OccupationListData = [
+    {
+      label: "Occupation",
+      options:
+        MasterDropDown &&
+        MasterDropDown?.occupation?.map((OCP, id) => ({
+          label: `${OCP}`,
+          value: `${id}`,
         })),
     },
   ];
@@ -104,10 +99,11 @@ const KycDetails = (data) => {
   function handleMaritalStatus(MaritalStatus) {
     setMaritalStatus(MaritalStatus);
   }
+
   function handleOccupationName(OccupationObject) {
-    setOccupationId(OccupationObject.value);
     setOccupationName(OccupationObject.label);
   }
+
   function handleRelationship(Relationship) {
     setRelationship(Relationship);
   }
@@ -115,7 +111,7 @@ const KycDetails = (data) => {
   function handleStatesDropdown(StateObject) {
     setStatesCode(StateObject.value);
     setStateName(StateObject.label);
-    setLoader(true)
+    setLoader(true);
   }
 
   function handleDistrictCode(DistrictObject) {
@@ -133,7 +129,14 @@ const KycDetails = (data) => {
     SetChangeEvent(OtherDocName);
     setIsDisabled(OtherDocName);
   }
-
+  const Occupations = {
+    Agriculture: 1,
+    "Dairy Farmer": 3,
+    Other: 6,
+    "Private Sector": 4,
+    "Public Sector": 5,
+    Trader: 2,
+  };
   // Marital Status selectbox
   const MaritalStatusList = [
     { value: "single", label: "Unmarried" },
@@ -143,27 +146,16 @@ const KycDetails = (data) => {
   ];
 
   // Occupation selectbox
-  const OccupationListData = [
-    {
-      label: "Occupation",
-      options:
-        OccupationList.data &&
-        OccupationList.data.map((OCP) => ({
-          label: `${OCP.occupation}`,
-          value: `${OCP.id}`,
-        })),
-    },
-  ];
 
   //   Relationship Status selectbox
   const RelationshipList = [
     {
       label: "Relationship",
       options:
-        RelationList.data &&
-        RelationList.data.relation_data.map((Relation) => ({
-          label: `${Relation.relation}`,
-          value: `${Relation.relation}`,
+        MasterDropDown &&
+        MasterDropDown.relations.map((Relation) => ({
+          label: `${Relation}`,
+          value: `${Relation}`,
         })),
     },
   ];
@@ -202,13 +194,12 @@ const KycDetails = (data) => {
       });
   }, []);
 
-  
   useEffect(() => {
     if (StatesCode !== null) {
       SaathiService.getMasterdistrictsData(StatesCode)
         .then((data) => {
           setDistrictList(data);
-          setLoader(false)
+          setLoader(false);
         })
         .catch((error) => {
           console.warn("Not good data fetch :(");
@@ -226,39 +217,75 @@ const KycDetails = (data) => {
     }
   }, [StatesCode, DistrictCode, BlockCode]);
 
-//   console.log("checllll", userDetails);
-
-
   const onSubmit = (data) => {
-    setLoading(true)
+    setLoading(true);
     SetCorporate(true);
     data["dateOfBirth"] = date;
     localStorage.setItem("userDetail", JSON.stringify(data));
     let user_token = localStorage.getItem("token");
     const User_Mobile = localStorage.getItem("phone_number");
-    console.log(user_token, "token");
 
     var userId = localStorage.getItem("user-info-id");
     var formdata = new FormData();
-    formdata.append("dateOfBirth" , data.dateOfBirth);
-    formdata.append("gender", data.gender || userDetails?.personal_details?.gender);
-    formdata.append("martialStatus", MaritalStatus || userDetails?.personal_details?.martialStatus);
-    formdata.append("noOfMember", data.noOfMember || userDetails?.personal_details?.noOfMember);
-    formdata.append("occupation", OccupationName || userDetails?.personal_details?.occupation);
-    formdata.append("occupation_id", OccupationId || userDetails?.personal_details?.occupation_id);
-    formdata.append("aadharNumber", data.aadharNumber || userDetails?.personal_details?.aadharNumber);
-    formdata.append("panNumber", data.panNumber || userDetails?.personal_details?.panNumber);
+    formdata.append(
+      "dateOfBirth",
+      data.dateOfBirth || userDetails?.personal_details?.dateOfBirth
+    );
+    formdata.append(
+      "gender",
+      data.gender || userDetails?.personal_details?.gender
+    );
+    formdata.append(
+      "martialStatus",
+      MaritalStatus || userDetails?.personal_details?.martialStatus
+    );
+    formdata.append(
+      "noOfMember",
+      data.noOfMember || userDetails?.personal_details?.noOfMember
+    );
+    formdata.append(
+      "occupation",
+      OccupationName || userDetails?.personal_details?.occupation
+    );
+    formdata.append(
+      "occupation_id",
+      Occupations[OccupationName] ||
+        userDetails?.personal_details?.occupation_id
+    );
+    formdata.append(
+      "aadharNumber",
+      data.aadharNumber || userDetails?.personal_details?.aadharNumber
+    );
+    formdata.append(
+      "panNumber",
+      data.panNumber || userDetails?.personal_details?.panNumber
+    );
     formdata.append("phoneNumber", User_Mobile);
-    formdata.append("address", data.address || userDetails?.personal_details?.address );
+    formdata.append(
+      "address",
+      data.address || userDetails?.personal_details?.address
+    );
     formdata.append("city", BlockName || userDetails?.personal_details?.city);
     formdata.append("city_id", BlockCode);
     formdata.append("state", StateName || userDetails?.personal_details?.state);
     formdata.append("state_id", StatesCode);
-    formdata.append("district", DistrictName || userDetails?.personal_details?.district);
+    formdata.append(
+      "district",
+      DistrictName || userDetails?.personal_details?.district
+    );
     formdata.append("district_id", DistrictCode);
-    formdata.append("nomineeName", data.nomineeName || userDetails?.personal_details?.nomineeName);
-    formdata.append("nomineeRelationship", Relationship || userDetails?.personal_details?.nomineeRelationship);
-    formdata.append("pincode", data.pincode || userDetails?.personal_details?.pincode);
+    formdata.append(
+      "nomineeName",
+      data.nomineeName || userDetails?.personal_details?.nomineeName
+    );
+    formdata.append(
+      "nomineeRelationship",
+      Relationship || userDetails?.personal_details?.nomineeRelationship
+    );
+    formdata.append(
+      "pincode",
+      data.pincode || userDetails?.personal_details?.pincode
+    );
     formdata.append("ui_section_id", "2");
 
     for (let d = 0; d < data.profile_picture.length; d++) {
@@ -334,35 +361,31 @@ const KycDetails = (data) => {
           });
           setKycDetail(true);
           setCompletedSection("2");
-          setLoading(false)
-        }
-         else {
+          setLoading(false);
+        } else {
           Swal.fire({
             icon: "warning",
             title: result.message,
             timer: 3000,
           });
-          setLoading(false)
+          setLoading(false);
         }
         // if(result.status===200) {
         // document.getElementById("save_btn").disabled=true }
       })
-      .catch((err)=>{
-        console.log(err)
-        setLoading(false)
-      }
-      )
-      
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   };
-
 
   return (
     <section className="sign_in_area col-lg-12">
       <div className="px-4">
         <div className="login_info pl-0">
           <h2 className="f_p f_600 f_size_24 t_color3 mb_40 mt_20 text-center">
-            Fill the KYC Details in
-            <span className="f_700"> Application</span>
+            Fill the <span className="f_700 orange">KYC Details</span> in
+            Application
           </h2>
 
           <div className="formdetails">
@@ -381,7 +404,7 @@ const KycDetails = (data) => {
                       setDate(e.target.value);
                     }}
                     // defaultValue={userDetails?.personal_details?.dateOfBirth }
-                          />
+                  />
                 </div>
                 {errors.dateOfBirth && (
                   <p className="m input-error">Please fill DOB</p>
@@ -461,7 +484,10 @@ const KycDetails = (data) => {
                         handleMaritalStatus(MaritalStatus.value);
                       }}
                       options={MaritalStatusList}
-                      placeholder={userDetails?.personal_details?.martialStatus || "Select Status"}
+                      placeholder={
+                        userDetails?.personal_details?.martialStatus ||
+                        "Select Status"
+                      }
                       className="select_box"
                       styles={customStyles}
                     />
@@ -483,7 +509,10 @@ const KycDetails = (data) => {
                       onChange={(OccupationName) => {
                         handleOccupationName(OccupationName);
                       }}
-                      placeholder={userDetails?.personal_details?.occupation || "Select Occupation"}
+                      placeholder={
+                        userDetails?.personal_details?.occupation ||
+                        "Select Occupation"
+                      }
                       options={OccupationListData}
                       classNamePrefix="select_box"
                     />
@@ -513,7 +542,9 @@ const KycDetails = (data) => {
                         handleStatesDropdown(StatesCode);
                       }}
                       options={optionStatesCode}
-                      placeholder={userDetails?.personal_details?.state || "Select State"}
+                      placeholder={
+                        userDetails?.personal_details?.state || "Select State"
+                      }
                       classNamePrefix="select2-selection"
                     />
                   </div>
@@ -536,10 +567,12 @@ const KycDetails = (data) => {
                         handleDistrictCode(DistrictCode);
                       }}
                       options={optionDistrictCode}
-                      placeholder={userDetails?.personal_details?.district || "Select District"}
+                      placeholder={
+                        userDetails?.personal_details?.district ||
+                        "Select District"
+                      }
                       classNamePrefix="select2-selection"
                       isLoading={loader}
-                    
                     />
                   </div>
                 </div>
@@ -557,7 +590,9 @@ const KycDetails = (data) => {
                         handleBlockCode(BlockCode);
                       }}
                       options={optionBlockCode}
-                      placeholder={userDetails?.personal_details?.city || "Select City"}
+                      placeholder={
+                        userDetails?.personal_details?.city || "Select City"
+                      }
                       classNamePrefix="select2-selection"
                     />
                   </div>
@@ -572,20 +607,21 @@ const KycDetails = (data) => {
                     name="pincode"
                     type="text"
                     placeholder="Pincode"
-                    required={!userDetails?.personal_details?.pincode ? true :false}
+                    required={
+                      !userDetails?.personal_details?.pincode ? true : false
+                    }
                     {...register("pincode", {
                       minLength: 6,
                       maxLength: 7,
                     })}
                     defaultValue={
-                        userDetails
-                          ? userDetails?.personal_details?.pincode
-                          : ""
-                      }
+                      userDetails ? userDetails?.personal_details?.pincode : ""
+                    }
                   />
-                  {errors?.pincode !== null || errors.pincode !== "undefined"  && (
-                    <p className="m input-error">Enter pin code</p>
-                  )}
+                  {errors?.pincode !== null ||
+                    (errors.pincode !== "undefined" && (
+                      <p className="m input-error">Enter pin code</p>
+                    ))}
                 </div>
 
                 <div className="col-lg-6 form-group text_box">
@@ -598,16 +634,19 @@ const KycDetails = (data) => {
                     type="text"
                     placeholder="Enter Address"
                     defaultValue={userDetails?.personal_details?.address}
-                    required={!userDetails?.personal_details?.address ? true :false}
+                    required={
+                      !userDetails?.personal_details?.address ? true : false
+                    }
                     {...register("address", {
                       pattern: {
                         value: /[A-Za-z]/,
                       },
                     })}
                   />
-                  {errors.address !== null || errors.address !== "undefined" && (
-                    <p className="m input-error">please enter address</p>
-                  )}
+                  {errors.address !== null ||
+                    (errors.address !== "undefined" && (
+                      <p className="m input-error">please enter address</p>
+                    ))}
                 </div>
               </div>
 
@@ -616,11 +655,12 @@ const KycDetails = (data) => {
                   <h4 className="mb-1">
                     Other Details <small style={{ color: "#ff0000" }}>*</small>
                   </h4>
+
                   <hr />
                 </div>
                 <div className=" col-lg-6 form-group text_box">
                   <label className="f_p text_c f_400 m-0 mb-1">
-                    No. of Family Numbers{" "}
+                    No. of Family Members{" "}
                     <small style={{ color: "#ff0000" }}>*</small>
                   </label>
                   <input
@@ -628,15 +668,16 @@ const KycDetails = (data) => {
                     name="noOfMember"
                     type="number"
                     placeholder="Enter Number "
-                    required={!userDetails?.personal_details?.noOfMember ?true :false}
-                    {...register("noOfMember", {
-                    })}
+                    required={
+                      !userDetails?.personal_details?.noOfMember ? true : false
+                    }
+                    {...register("noOfMember", {})}
                     defaultValue={userDetails?.personal_details?.noOfMember}
-                    
                   />
-                  {errors.noOfMember !== null || errors.noOfMember !== "undefined" && (
-                    <p className="m input-error">Enter No. of member</p>
-                  )}
+                  {errors.noOfMember !== null ||
+                    (errors.noOfMember !== "undefined" && (
+                      <p className="m input-error">Enter No. of member</p>
+                    ))}
                 </div>
 
                 <div className=" col-lg-6 form-group text_box">
@@ -647,17 +688,19 @@ const KycDetails = (data) => {
                     className="form-control"
                     name="nomineeName"
                     type="text"
-                    required={!userDetails?.personal_details?.noOfMember ? true :false}
+                    required={
+                      !userDetails?.personal_details?.noOfMember ? true : false
+                    }
                     placeholder="Enter Nominee Name"
-                    {...register("nomineeName", {
-                    })}
+                    {...register("nomineeName", {})}
                     defaultValue={userDetails?.personal_details?.noOfMember}
                   />
-                  {errors.nomineeName !== null || errors.nomineeName !== "undefined" && (
-                    <p className="m input-error">
-                      Enter name of nominee <small>*</small>
-                    </p>
-                  )}
+                  {errors.nomineeName !== null ||
+                    (errors.nomineeName !== "undefined" && (
+                      <p className="m input-error">
+                        Enter name of nominee <small>*</small>
+                      </p>
+                    ))}
                 </div>
 
                 <div className="col-lg-6 form-group text_box">
@@ -679,7 +722,10 @@ const KycDetails = (data) => {
                       }}
                       options={RelationshipList}
                       classNamePrefix="select2-selection"
-                      placeholder={userDetails?.personal_details?.nomineeRelationship || "Select Relationship"}
+                      placeholder={
+                        userDetails?.personal_details?.nomineeRelationship ||
+                        "Select Relationship"
+                      }
                     />
                   </div>
                 </div>
@@ -700,12 +746,15 @@ const KycDetails = (data) => {
                     type="number"
                     placeholder="Enter Aadhar Number"
                     defaultValue={userDetails?.personal_details?.aadharNumber}
-                    required={!userDetails?.personal_details?.aadharNumber ? true :false}
+                    required={
+                      !userDetails?.personal_details?.aadharNumber
+                        ? true
+                        : false
+                    }
                     {...register("aadharNumber", {
                       maxLength: 12,
                       minLength: 12,
                     })}
-                    
                   />
                   {errors.aadharNumber && (
                     <p className="m input-error">Invalid Aadhar Number</p>
@@ -722,7 +771,9 @@ const KycDetails = (data) => {
                     className="text-uppercase"
                     placeholder="Enter PAN Number"
                     defaultValue={userDetails?.personal_details?.panNumber}
-                    required={!userDetails?.personal_details?.panNumber ? true :false}
+                    required={
+                      !userDetails?.personal_details?.panNumber ? true : false
+                    }
                     {...register("panNumber", {
                       maxLength: 10,
                       minLength: 10,
@@ -871,7 +922,10 @@ const KycDetails = (data) => {
                   id="save_btn"
                   onClick={handleSubmit(onSubmit)}
                 >
-                  {!userDetails?.personal_details?.aadharNumber  ? "Save" : "Update"}  &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
+                  {!userDetails?.personal_details?.aadharNumber
+                    ? "Save"
+                    : "Update"}{" "}
+                  &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
                 </button>
               </div>
             </form>

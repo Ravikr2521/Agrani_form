@@ -466,24 +466,22 @@ button:focus {
 .slider_btn:hover {
   color: #fff;
 }
-.otp_btn{
+.otp_btn {
   font: 500 14px "Poppins", sans-serif;
   color: orange !important;
   /* background: #adb5bd; */
   border-radius: 5px;
   padding: 10px !important;
-   border: 1px solid orange !important;
+  border: 1px solid orange !important;
   transition: all 0.3s linear;
   cursor: pointer;
   display: inline-block;
   box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
-
 }
-.otp_btn:hover{
+.otp_btn:hover {
   color: white !important;
-  background: #FBC077 !important;
-  border: 1px solid #FBC077 !important ;
-   
+  background: rgba(255, 166, 0, 0.931) !important;
+  border: 1px solid #fbc077 !important ;
 }
 
 .btn_three {
@@ -502,15 +500,13 @@ button:focus {
   box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
 }
 
-
-.Login_button{
-  
+.Login_button {
   font: 500 14px "Poppins", sans-serif;
   color: #fff;
-  background:  #52b788  !important;
-  border-radius: 10px;
-  padding: 15px 50px !important;
-  border: 1px solid #52b788  !important;
+  background: #52b788 !important;
+  border-radius: 8px;
+  padding: 13px 50px !important;
+  border: 1px solid #52b788 !important;
   margin-top: 20px !important;
   -webkit-transition: all 0.3s linear;
   -o-transition: all 0.3s linear;
@@ -518,7 +514,10 @@ button:focus {
   cursor: pointer;
   display: inline-block;
   box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
-
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
 }
 
 .resend_button {
@@ -532,10 +531,9 @@ button:focus {
   cursor: pointer;
   display: inline-block;
   box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
-  
 }
 
-.btn_success{
+.btn_success {
   font: 500 14px "Poppins", sans-serif;
   color: #fff;
   background: lightgreen;
@@ -549,14 +547,12 @@ button:focus {
   cursor: pointer;
   display: inline-block;
   box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
-
 }
 
 .btn_three:hover {
   color: #f59d0e;
   background: transparent;
 }
-
 
 .agency_banner_btn {
   font: 500 14px "Poppins", sans-serif;
@@ -950,7 +946,6 @@ button:focus {
     padding: 88px 17px 12px 6px !important;
     line-height: 14px !important;
     font: 400 11px "Poppins", sans-serif !important;
-    
   }
   .formdetails {
     padding: 0 !important;
@@ -1097,7 +1092,7 @@ button:focus {
 .menu > .nav-item.submenu .dropdown-menu .nav-item .nav-link:after {
   display: none;
 }
-.navbar{
+.navbar {
   height: 75px !important;
 }
 .menu
@@ -1362,7 +1357,7 @@ button:focus {
 @media (min-width: 992px) {
   .menu > .nav-item.submenu.mega_menu .mega_menu_inner > .dropdown-menu {
     display: -webkit-box;
-    display: -ms-flexbox; 
+    display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
@@ -6110,12 +6105,11 @@ button:focus {
   color: #fff;
   background: #3d64f4;
 }
-.save_btn{
+.save_btn {
   background-color: orange;
   color: white;
-  height:50px;
+  height: 50px;
   box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
-
 }
 
 /*=============== saas_featured_area css ==============*/
@@ -6753,7 +6747,7 @@ button:focus {
   background: #5f51fb;
   padding: 15px 42px;
 }
-.btn_four{
+.btn_four {
   margin-top: 0px;
   font-size: 15px;
   background: lightgreen;
@@ -6765,7 +6759,6 @@ button:focus {
   .btn_four:hover {
   background: transparent;
 }
-
 
 .perfect_solution_area
   .perfect_solution_left
@@ -7748,7 +7741,6 @@ button:focus {
   color: #ffffff;
   background: #f59d0e;
 }
-
 
 .software_service_tab_content .software_service_item {
   padding-right: 30px;
@@ -11749,7 +11741,6 @@ button:focus {
   border-radius: 0px;
   background: transparent;
   border-bottom: 1px solid #e4e0ee;
- 
 }
 
 .faq_content .tab-pane .card .card-header {
@@ -12351,11 +12342,10 @@ button:focus {
   border-bottom: 1px solid #eeebf6;
   padding-bottom: 25px;
 }
-.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
-  isolation:auto;
-
+.nav-tabs .nav-link:focus,
+.nav-tabs .nav-link:hover {
+  isolation: auto;
 }
-
 
 .contact_info_item p {
   color: #677294;
@@ -12604,7 +12594,6 @@ button:focus {
 
 /*==================== sign_in_area css ==================*/
 
-
 .sign_info .login_info {
   padding-left: 30px;
 }
@@ -12682,7 +12671,7 @@ button:focus {
   border-color: #f59d0e;
   color: #f59d0e;
 }
-.sign_btn_transparent:active{
+.sign_btn_transparent:active {
   background: #f59d0e;
   color: #fff;
 }
@@ -12691,7 +12680,6 @@ button:focus {
   background: #f59d0e;
   color: #fff;
 } */
-
 
 /*============= get_quote_form css============*/
 .get_quote_form .form-group {
@@ -12739,12 +12727,11 @@ button:focus {
 .get_quote_form .btn_three {
   margin-top: 10px;
 }
-.agreecheckbox
-{
+.agreecheckbox {
   margin-left: 6px;
-    margin-top: 10px;
+  margin-top: 10px;
 }
-.agreeline{
+.agreeline {
   margin-top: 3px;
 
   margin-left: 24px;
@@ -22463,7 +22450,7 @@ input[type="text"] {
   margin-right: -1px;
   border-radius: 2px;
   margin-top: -0.5px;
-padding: 7px;
+  padding: 7px;
 }
 .css-1okebmr-indicatorSeparator {
   display: none !important;
@@ -22485,31 +22472,29 @@ padding: 7px;
 .select2-selection__input {
   box-shadow: none !important;
   flex-wrap: nowrap;
-  
 }
 .select2-selection__control:focus {
   border-color: #f2effc;
   box-shadow: 0px 10px 14px 0px rgb(12 0 46 / 6%);
   outline: none;
-
 }
 
-.download_btn  {
+.download_btn {
   padding: 10px 40px 10px 10px;
   font-size: 16px;
-  background-color: #FF6461;
+  background-color: #ff6461;
   color: white;
   border: 1px solid #0000;
   cursor: pointer;
 }
 .download_btn a {
-  color:white
+  color: white;
 }
 .download_btn:hover {
-background-color: #0353e9;
+  background-color: #0353e9;
 }
 .download_btn > i {
-margin-right:5px;
+  margin-right: 5px;
 }
 
 /* .css-1pahdxg-control,
@@ -23032,7 +23017,6 @@ input[type="file"] {
   padding: 24px 0px 82px !important;
 }
 
-
 .btn_bg_gray {
   background: #e0e0e0;
   border: 1px solid #cacaca;
@@ -23074,32 +23058,30 @@ input[type="file"] {
 .Contactmessage {
   height: 78px !important;
 }
-.w{
-  height:60px;
-  width:100%;
+.w {
+  height: 60px;
+  width: 100%;
   background-color: #fafafa;
- 
 }
-.mb{
+.mb {
   margin-bottom: -2;
 }
-.input-error{
-  color: #DE1339;
-    font-size: 0.8125em;
-    font-weight: normal;
-    line-height: 1;
-    margin-top: 0.9375em;
-    display: block;
-    text-align: left;
-    font-style: italic;
+.input-error {
+  color: #de1339;
+  font-size: 0.8125em;
+  font-weight: normal;
+  line-height: 1;
+  margin-top: 0.9375em;
+  display: block;
+  text-align: left;
+  font-style: italic;
 }
 
-iframe{
+iframe {
   position: relative !important;
 }
 
-
-.saved_btn{
+.saved_btn {
   font: 500 14px "Poppins", sans-serif;
   color: #fff;
   background: #f59d0e;
@@ -23116,26 +23098,25 @@ iframe{
   width: 100%;
   text-align: center;
 }
-.saved_btn:hover{
+.saved_btn:hover {
   color: #f59d0e;
   background: transparent;
-
 }
-.select_box{
+.select_box {
   height: 55px !important;
 }
 .css-19bb58m {
-    visibility: visible;
-    flex: 1 1 auto;
-    display: inline-grid;
-    grid-area: 1 / 1 / 2 / 2 !important;
-    grid-template-columns: 0px min-content !important;
-    margin: 4.5px;
-    height: 46px !important;
-    padding-bottom: 2px;
-    padding-top: 2px;
-    color: rgb(51, 51, 51);
-    box-sizing: border-box;
+  visibility: visible;
+  flex: 1 1 auto;
+  display: inline-grid;
+  grid-area: 1 / 1 / 2 / 2 !important;
+  grid-template-columns: 0px min-content !important;
+  margin: 4.5px;
+  height: 46px !important;
+  padding-bottom: 2px;
+  padding-top: 2px;
+  color: rgb(51, 51, 51);
+  box-sizing: border-box;
 }
 .css-1wy0on6 {
   -webkit-box-align: center;
@@ -23158,33 +23139,30 @@ iframe{
   margin-top: 12px !important;
   box-sizing: border-box;
 }
-.bg_image{
+.bg_image {
   background-image: url("https://auth-dev.agrani.tech/resources/ojcse/login/agrani/images/background.jpg");
 }
-.text_div{
+.text_div {
   background-color: #0a5004;
   color: white;
   width: 100%;
   border-radius: 10px;
   box-shadow: 2px 3px 9px 1px rgba(0, 0, 0, 0.5);
 }
-.custom_margin{
+.custom_margin {
   margin-left: 2rem;
 }
 
 @media screen and (max-width: 480px) {
-  
-  
-  .display{
+  .display {
     display: none !important;
   }
-  .save_btn{
+  .save_btn {
     background-color: orange;
     color: white;
-    height:50px;
-  
+    height: 50px;
   }
-  .otp_btn{
+  .otp_btn {
     font: 500 14px "Poppins", sans-serif;
     color: #fff;
     /* background: #adb5bd; */
@@ -23195,15 +23173,12 @@ iframe{
     cursor: pointer;
     display: inline-block;
     box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
-    
-  
   }
-  .otp_btn:hover{
-    color:white !important;
+  .otp_btn:hover {
+    color: white !important;
     background-color: orange;
-      
   }
-  .saved_btn{
+  .saved_btn {
     font: 500 14px "Poppins", sans-serif;
     color: #fff;
     background: #f59d0e;
@@ -23217,52 +23192,46 @@ iframe{
     cursor: pointer;
     display: inline-block;
     box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
-  
   }
-
 }
 
-.address_box{
+.address_box {
   border: 1px solid lightgray;
   box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
   border-radius: 10px;
 }
-.submitheading{
+.submitheading {
   color: #0bc30b;
-  
 }
-.paragraph{
-  color:black
+.paragraph {
+  color: black;
 }
-.bold{
+.bold {
   font-weight: 500;
   font-size: 16px;
   color: black;
 }
-.margin{
+.margin {
   margin-top: 36px;
   margin-bottom: -31px;
 }
-.download_button a{
-color:white;
-box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
-
+.download_button a {
+  color: white;
+  box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
 }
-.download_button:hover a{
-  color:orange;
- background-color: white !important;
-
+.download_button:hover a {
+  color: orange;
+  background-color: white !important;
 }
 .swal2-popup {
   font-weight: 100;
   font-size: 0.8rem !important;
-  
 }
 .swal2-title {
   position: relative;
   max-width: 100%;
   margin: 0;
-  padding: .8em 1em 0;
+  padding: 0.8em 1em 0;
   color: inherit;
   font-size: 1.875em;
   font-weight: 300;
@@ -23285,7 +23254,7 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
 .swal2-html-container {
   z-index: 1;
   justify-content: center;
-  margin: 1em 1.6em .3em;
+  margin: 1em 1.6em 0.3em;
   padding: 1px;
   overflow: auto;
   color: inherit;
@@ -23297,13 +23266,13 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
   word-break: break-word;
 }
 .mobile_input {
-  width:70% !important;
+  width: 70% !important;
 }
-.button_m{
+.button_m {
   margin-top: 2.2rem;
 }
 
-.otp_field{
+.otp_field {
   font: 400 16px "Poppins", sans-serif;
   color: #222d39;
   height: 55px;
@@ -23314,30 +23283,30 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
   border: 1px solid #e7e7e7;
   padding-left: 10px;
 }
-.orange{
+.orange {
   color: orange;
 }
-.orange:hover{
-  color:orange;
+.orange:hover {
+  color: orange;
 }
-.black_clr{
-  color:black;
+.black_clr {
+  color: black;
 }
-.existing_user{
+.existing_user {
   border-radius: 10px;
 }
-.document_div{
-
+.document_div {
   height: 100px !important;
-  width:50px !important;
+  width: 50px !important;
   border-radius: 5px;
   margin: 11px 27px 12px 26px;
 }
-.documents{
-  height: 100px !important;
-  width:125px !important;
+.documents {
+  height: 90px !important;
+  width: 125px !important;
   border-radius: 5px;
-  margin: 0px 0px 0px -8px;   
+  margin: 0px 0px 0px -8px;
+  object-fit: contain;
 }
 
 .otpElements {
@@ -23366,26 +23335,26 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
   background: white;
   font-size: 18px;
 }
-.login_icon{
+.login_icon {
   position: absolute;
-    top: -2.5rem;
-    left: 13rem;
-    background: #fbfbfb;
-    padding: 12px 20px;
-    border-radius: 44px;
+  top: -2.5rem;
+  left: 13rem;
+  background: #fbfbfb;
+  padding: 12px 20px;
+  border-radius: 44px;
 }
-.zindex{
+.zindex {
   z-index: 1000;
 }
-.color{
-  color:black !important;
+.color {
+  color: black !important;
   margin-left: 50px;
 }
-.dbtnclr a{
-  color:white;
+.dbtnclr a {
+  color: white;
 }
-.dbtnclr:hover a{
-  color:orange !important;
+.dbtnclr:hover a {
+  color: orange !important;
 }
 .css-qbdosj-Input {
   grid-area: 0 !important;
@@ -23395,10 +23364,10 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
 }
 
 .swal-title {
-  color: rgba(0,0,0,.65);
+  color: rgba(0, 0, 0, 0.65);
   font-weight: 600;
   text-transform: none;
-  padding:0;
+  padding: 0;
   position: relative;
   display: block;
   font-size: 27px;
@@ -23410,7 +23379,7 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
   display: block;
   width: 100%;
   height: 55px !important;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -23418,16 +23387,16 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
-  border-radius: .25rem;
-  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
-.resend_otp{
+.resend_otp {
   top: 9rem;
   left: 21rem;
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
-  .resend_otp{
+  .resend_otp {
     top: 11rem;
     left: 14rem;
   }
@@ -23438,40 +23407,41 @@ box-shadow: 0px 20px 24px 0px rgba(0, 11, 40, 0.1);
     background: #fbfbfb;
     padding: 12px 20px;
     border-radius: 44px;
-}
-.inputStyle {
-  width: 60% !important;
-  height: 40px;
-  border-radius: 7px;
-  border: 1px solid grey;
-  margin-left: 8px;
-  margin-right: 8px;
-  background: white;
-  font-size: 18px;
-}
-.mt_130 {
-  margin-top: 100px;
-}
-.text_box{
-  margin-bottom: 0px;
-}
-label , Label{
-  margin-top: 5px !important;
-  margin-bottom: 0px !important;
-}
-.css-1dimb5e-singleValue {
-  grid-area: 1 / 1 / 2 / 3;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: rgb(51, 51, 51);
-  margin-left: 2px;
-  margin-right: 2px;
-  margin-top: 12px !important;
-  box-sizing: border-box;
-  margin-bottom: 10px;
-}
+  }
+  .inputStyle {
+    width: 60% !important;
+    height: 40px;
+    border-radius: 7px;
+    border: 1px solid grey;
+    margin-left: 8px;
+    margin-right: 8px;
+    background: white;
+    font-size: 18px;
+  }
+  .mt_130 {
+    margin-top: 100px;
+  }
+  .text_box {
+    margin-bottom: 0px;
+  }
+  label,
+  Label {
+    margin-top: 5px !important;
+    margin-bottom: 0px !important;
+  }
+  .css-1dimb5e-singleValue {
+    grid-area: 1 / 1 / 2 / 3;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: rgb(51, 51, 51);
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 12px !important;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
 }
 
 .cursor {

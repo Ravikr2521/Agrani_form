@@ -4,141 +4,143 @@ import Swal from "sweetalert2";
 import FooterData from "../components/Footer/FooterData";
 import CloudServiceTab from "../components/AgraniLanding/SaathiForm/CloudServiceTab";
 import OnepageMenu from "../components/AgraniLanding/OnepageMenu";
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 
-import { CgLogIn } from "react-icons/cg"
+import { CgLogIn } from "react-icons/cg";
 import Existinguser from "../components/AgraniLanding/SaathiForm/PreviewPage/Existinguser";
-
 
 const FarmerSaathi = () => {
   // console.clear()
-  var applicantID = localStorage.getItem("applicant_id")
-  var urlid = localStorage.getItem("urlid")
-
-
+  var applicantID = localStorage.getItem("applicant_id");
+  var urlid = localStorage.getItem("urlid");
 
   const [Verify, setVerify] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState();
 
-  const [otp, setOtp] = useState("")
+  const [otp, setOtp] = useState("");
 
-  const history = useHistory()
+  const history = useHistory();
 
-  const [btnState, setbtnState] = useState(false)
-  const [btnState1, setbtnState1] = useState(true)
+  const [btnState, setbtnState] = useState(false);
+  const [btnState1, setbtnState1] = useState(true);
 
   const [usertype, setusertype] = useState(false);
- 
 
   const [edit, setEdit] = useState(false);
   const [EntityType, setEntityType] = useState("Individual");
   const [radioValue, setRadioValue] = useState(1);
   var usertypepart = usertype;
 
-
-  const { register, handleSubmit, formState: { errors }, } = useForm({ mode: "onChange", })
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ mode: "onChange" });
 
   const editFunction = (e) => {
     setEdit(true);
-    setbtnState(true)
-    setbtnState1(false)
-
+    setbtnState(true);
+    setbtnState1(false);
   };
 
-  var phone = localStorage.getItem("phoneNumber")
+  var phone = localStorage.getItem("phoneNumber");
   const verifyNumber = (e) => {
     setPhoneNumber(e.target.value);
-
   };
   const verifyFunction = (e) => {
     setVerify(true);
-
   };
   const NewFunction = (e) => {
     setEdit(false);
-    setbtnState1(true)
-    setbtnState(false)
+    setbtnState1(true);
+    setbtnState(false);
   };
 
   const onChange = (ev) => {
     console.log(ev.target.value + EntityType);
     setRadioValue(ev.target.value);
-
   };
   function handleLogout() {
-    localStorage.removeItem(urlid)
+    localStorage.removeItem(urlid);
     localStorage.clear();
-    history.push("/")
-    window.location.reload()
+    history.push("/");
+    window.location.reload();
   }
 
   function sendOtp(e) {
     const data = {
-      phoneNumber: phoneNumber
-    }
+      phoneNumber: phoneNumber,
+    };
     var formdata = new FormData();
     formdata.append("email_or_phone", phone);
 
     var requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
+      method: "GET",
+      redirect: "follow",
     };
 
-    fetch(`https://saathi-api.agrani.io/api/existing-user-form/?email_or_phone=${phoneNumber}`, requestOptions)
-      .then(r => r.json())
-      .then(result => {
-        result.status == 200 ? Swal.fire({
-          position: "bottom-end",
-          icon: 'success',
-          title: 'Otp sent',
-          showConfirmButton: false,
-          timer: 1000
-        }) && verifyFunction(true) : Swal.fire({
-          title: result.message
-        })
-      })
+    fetch(
+      `https://saathi-api.agrani.io/api/existing-user-form/?email_or_phone=${phoneNumber}`,
+      requestOptions
+    )
+      .then((r) => r.json())
+      .then((result) => {
+        result.status == 200
+          ? Swal.fire({
+              position: "bottom-end",
+              icon: "success",
+              title: "Otp sent",
+              showConfirmButton: false,
+              timer: 1000,
+            }) && verifyFunction(true)
+          : Swal.fire({
+              title: result.message,
+            });
+      });
   }
   // useEffect(() => {
   //     sendOtp()
   // }, []);
 
-
-
   const onSubmit = () => {
-
     var formdata = new FormData();
     formdata.append("email_or_phone", phoneNumber);
     formdata.append("otp_code", otp);
 
     var requestOptions = {
-      method: 'POST',
+      method: "POST",
       body: formdata,
     };
 
-
-    fetch(`https://saathi-api.agrani.io/api/existing-user-form/`, requestOptions)
-      .then(r => r.json())
-      .then(result => {
-        console.log(result, result.token)
+    fetch(
+      `https://saathi-api.agrani.io/api/existing-user-form/`,
+      requestOptions
+    )
+      .then((r) => r.json())
+      .then((result) => {
+        console.log(result, result.token);
         // seturlid(result.ui_section_id);
         if (result.status == 200) {
-          localStorage.setItem("applicant_id", (result.applicant_id));
-          localStorage.setItem("token", (result.token));
-          Swal.fire({ icon: 'success', title: 'Logged In', showConfirmButton: false, timer: 1000 });
+          localStorage.setItem("applicant_id", result.applicant_id);
+          localStorage.setItem("token", result.token);
+          Swal.fire({
+            icon: "success",
+            title: "Logged In",
+            showConfirmButton: false,
+            timer: 1000,
+          });
           setusertype(true);
         }
 
         if (result.status != 200) {
-          Swal.fire(result.message)
+          Swal.fire(result.message);
         }
 
         if (result.ui_section_id == 6) {
-          history.push('/final-preview')
+          history.push("/final-preview");
         }
-
-
-      },)
+      });
   };
   return (
     <div className="body_wrapper bg-light-org">
@@ -152,9 +154,7 @@ const FarmerSaathi = () => {
         <div className="sign_info_content text-center mb_50">
           <h3 className="f_p f_600 f_size_40 t_color mb_20">
             Welcome to Agrani Saathi
-
           </h3>
-
 
           {/* {urlid === undefined || urlid === "undefined" || urlid === null || urlid === 0 ? (
             <>
@@ -188,17 +188,13 @@ const FarmerSaathi = () => {
                 Logout
               </button>
             )} */}
-
         </div>
       </div>
-
-      
 
       <div className="bg-shd col-lg-11 m-auto">
         <section className="software_service_area sec_pad ">
           <div className="container">
             {edit === false || usertypepart === true ? (
-
               <CloudServiceTab urlid={urlid} />
             ) : (
               // <section className="sign_in_area">
@@ -261,12 +257,11 @@ const FarmerSaathi = () => {
               //                   </button>}
               //               </div>
 
-
               //               {Verify == true ? (
 
               //                 <div className=" col-lg-12 text-center justify-content-center">
               //                   <div className="form-group text_box ">
-              //                     <input type="number " 
+              //                     <input type="number "
               //                     className="form-control otp_field"
               //                       id="otp"
               //                       placeholder="Enter Otp"
@@ -303,14 +298,14 @@ const FarmerSaathi = () => {
               //   </div>
               // </section>
 
-              <Existinguser urlid={urlid}/>
+              <Existinguser urlid={urlid} />
             )}
           </div>
         </section>
-      </div >
+      </div>
 
       <FooterTwo FooterData={FooterData} />
-    </div >
+    </div>
   );
 };
 export default FarmerSaathi;

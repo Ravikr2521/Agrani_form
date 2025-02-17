@@ -18,28 +18,24 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import "popper.js";
 import FarmerContext from "./components/FarmerContext";
 import AppBanner from "./components/AgraniLanding/AppBanner";
+import { ToastContainer } from "react-toastify";
 
 const loader = document.querySelector("#preloader");
 
-// if you want to show the loader when React loads data again
 const showLoader = () => loader.classList.remove("loader--hide");
 
 const hideLoader = () => loader.classList.add("loader--hide");
 
 setTimeout(
   () =>
-    // the show/hide functions are passed as props
     ReactDOM.render(
-     <FarmerContext>
-       <App hideLoader={hideLoader} showLoader={showLoader} />
-       {/* <AppBanner/> */}
-     </FarmerContext>,
+      <FarmerContext>
+        <App hideLoader={hideLoader} showLoader={showLoader} />
+        {/* <AppBanner/> */}
+      </FarmerContext>,
       document.getElementById("root")
     ),
   1000
 );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();

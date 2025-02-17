@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
-import Swal from "sweetalert2";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useHistory } from "react-router-dom";
 import { CgLogIn } from "react-icons/cg";
-import OTPInput from "react-otp-input";
-import { CryptoState } from "../FarmerContext";
-import { FiLogIn } from "react-icons/fi";
-import { FaUserAlt } from "react-icons/fa";
-import Carousel from "react-bootstrap/Carousel";
 
-import { Card, CardBody, Label } from "reactstrap";
-import { Spinner } from "react-bootstrap";
+import OTPInput from "react-otp-input";
+import { useHistory } from "react-router-dom";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import Swal from "sweetalert2";
+import { CryptoState } from "../FarmerContext";
+import { Card, CardBody } from "reactstrap";
+import Login_img from "../../assets/image/computer.png";
 
 const Login = () => {
   var applicantID = localStorage.getItem("applicant_id");
@@ -20,11 +18,7 @@ const Login = () => {
   const [Verify, setVerify] = useState(false);
   const [urlid, seturlid] = useState();
   const [phoneNumber, setPhoneNumber] = useState();
-  const [index, setIndex] = useState(0);
 
-  const handleSelect = (selectedIndex) => {
-    setIndex(selectedIndex);
-  };
   var Api_Url = process.env.REACT_APP_API_URL;
 
   const [otp, setOtp] = useState("");
@@ -108,6 +102,7 @@ const Login = () => {
             showConfirmButton: false,
             timer: 1000,
           });
+
           setLogoutButton(true);
 
           //   localStorage.setItem("applicant_id" , result.data.applicant_id)
@@ -343,16 +338,16 @@ const Login = () => {
         </div>
       </div> */}
 
-      <Card className="   position-relative">
-        <CardBody>
-          <div className="text-center login_icon">
-            <h1>
-              <FaUserAlt />
-            </h1>
+      <div className="rounded-3  position-relative">
+        <CardBody className="p-4 my-2">
+          <div className="text-center ">
+            <img src={Login_img} style={{ height: "80px" }} />
           </div>
-          <h2 className="f_p f_600 f_size_24  mb_40 mt_20 text-center mt-4">
-            <FiLogIn /> Login /Sign Up
-          </h2>
+          {Verify === true ? (
+            " "
+          ) : (
+            <h5 className=" f_600 my-4   text-center ">Login With Mobile</h5>
+          )}
           <form action="#" className="login-form sign-in-form">
             <div className="d-flex flex-column justify-content-center align-items-center">
               {Verify === true ? (
@@ -361,9 +356,9 @@ const Login = () => {
                 <div className="col-lg-11 text-center">
                   <div className="form-group text_box  ">
                     <input
-                      className=" form-control1"
+                      className="form-control1"
                       type="text"
-                      placeholder="Enter Mobile No."
+                      placeholder="Enter 10 digits Mobile No."
                       required
                       maxLength={10}
                       {...register("phoneNumber", {
@@ -379,10 +374,10 @@ const Login = () => {
                     )}
                   </div>
                   <div className=" d-flex justify-content-center">
-                    <div className="col-lg-6 col-8 mt-lg-0 mt-3">
+                    <div className="w-100 mt-lg-0 mt-3">
                       <button
                         id="sendotp"
-                        type="button"
+                        type="submiit"
                         onClick={(e) => sendOtp()}
                         name="otp_code"
                         className="otp_btn mb-2 w-100"
@@ -398,7 +393,12 @@ const Login = () => {
 
             {Verify === true ? (
               <div className="row justify-content-center mt-2">
-                <div className="d-flex justify-content-center align-items-center container">
+                <IoMdArrowRoundBack
+                  className="position-absolute cursor"
+                  onClick={() => setVerify(false)}
+                  style={{ top: "15px", left: "15px", fontSize: "20px" }}
+                />
+                <div className="d-flex justify-content-center align-items-center container mt-3">
                   <div className="  px-3">
                     <h5 className="m-0">Mobile phone verification</h5>
                     <span className="mobile-text">
@@ -438,7 +438,7 @@ const Login = () => {
                       <button
                         type="submit"
                         size=""
-                        className="btn Login_button mb-3 "
+                        className="btn Login_button  "
                         onClick={handleSubmit(onSubmit)}
                       >
                         Login <CgLogIn />
@@ -450,7 +450,7 @@ const Login = () => {
             ) : null}
           </form>
         </CardBody>
-      </Card>
+      </div>
     </div>
   );
 };

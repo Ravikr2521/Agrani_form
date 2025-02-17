@@ -18,8 +18,6 @@ const Preview = () => {
     KycDetail,
     personal,
   } = CryptoState();
- 
-
 
   var Api_Url = process.env.REACT_APP_API_URL;
   const [isEffects, setisEffects] = useState(false);
@@ -69,7 +67,7 @@ const Preview = () => {
       <div className="px-4">
         <div className="login_info pl-0">
           <h2 className="f_p f_600 f_size_24 t_color3 mb_40 mt_20 text-center">
-            <span className="f_700"> Application</span> Details
+            <span className="f_700 orange"> Application</span> Details
           </h2>
           <div className="formdetails">
             <div className="row">
@@ -124,7 +122,7 @@ const Preview = () => {
                   name=""
                   type="text"
                   defaultValue={
-                    userDetails?.personal_details?.alternatePhoneNumber    
+                    userDetails?.personal_details?.alternatePhoneNumber
                   }
                   disabled
                 />
@@ -134,7 +132,7 @@ const Preview = () => {
                 <input
                   name=""
                   type="text"
-                  defaultValue={userDetails?.email }
+                  defaultValue={userDetails?.email}
                   disabled
                 />
               </div>
@@ -293,7 +291,7 @@ const Preview = () => {
                     type="text"
                     defaultValue={
                       userDetails
-                        ? userDetails?.personal_details?.martialStatus
+                        ? userDetails?.personal_details?.occupation
                         : ""
                     }
                     disabled
@@ -711,17 +709,20 @@ const Preview = () => {
             <div className=" form-group mb-4">
               <label className="f_p text_c f_400">Your Documents</label>
 
-              <div className="row ">
+              <div className="row mx-1" style={{ gap: "12px" }}>
                 {dataimg &&
                   dataimg.map((res, index) =>
                     // console.log(res.file_extension ,"check img")
 
                     res.file_extension === ".pdf" ? (
-                      <Card className=" mt-3 " key={index}>
+                      <Card className=" mt-2 " key={index}>
                         <CardHeader className="text-center p-1 m-0">
                           {res.document_type}
                         </CardHeader>
-                        <CardBody key={res.id} className="">
+                        <CardBody
+                          key={res.id}
+                          className="d-flex justify-content-center align-items-center p-3"
+                        >
                           <iframe
                             src={res ? res.filename : ""}
                             className="documents"
@@ -731,17 +732,20 @@ const Preview = () => {
                         </CardBody>
                       </Card>
                     ) : (
-                      <Card lg={3} className="  mt-3 " key={index}>
+                      <Card lg={3} className="  mt-2 " key={index}>
                         <CardHeader className="text-center p-1 m-0">
                           {res.document_type ===
                           "Police Verification Certificate"
                             ? "Police Verification"
                             : res.document_type}
                         </CardHeader>
-                        <CardBody key={res.id} className="card ">
+                        <CardBody
+                          key={res.id}
+                          className="d-flex justify-content-center align-items-center p-3"
+                        >
                           <img
                             src={res ? res.filename : ""}
-                            className="documents"
+                            className="documents "
                             onClick={(e) => {
                               setisEffects(true);
                               setShowFinalImage(res.filename);

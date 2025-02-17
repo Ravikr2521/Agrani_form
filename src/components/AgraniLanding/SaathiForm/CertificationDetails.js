@@ -1,39 +1,29 @@
 import React, { useEffect, useState } from "react";
-import Select from "react-select";
-import { useForm } from "react-hook-form";
-import Swal from "sweetalert2";
-import { SaathiService } from "../../../service/saathi.service";
-import { CryptoState } from "../../FarmerContext";
-import { useHistory } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import Select from "react-select";
+import Swal from "sweetalert2";
+import { CryptoState } from "../../FarmerContext";
 
 const CertificationDetails = () => {
   var Api_Url = process.env.REACT_APP_API_URL;
   // console.clear()
   const history = useHistory();
-  const { setCertificate, SetCorporate ,userDetails } = CryptoState();
+  const { setCertificate, SetCorporate, userDetails } = CryptoState();
 
-  const [Qualificationlist, setQualificationlist] = useState({});
   const [changeEvent, SetChangeEvent] = useState(null);
   const [Change, setChange] = useState(null);
-  const [loading,setLoading]=useState(false)
-
-
-useEffect(() => {
-  if(userDetails?.certification_details?.is_insurance_exam_passed)
-  SetChangeEvent(userDetails?.certification_details?.is_insurance_exam_passed)
-  if(userDetails?.certification_details?.is_banking_exam_passed)
-  setChange(userDetails?.certification_details?.is_banking_exam_passed)
-}, [userDetails?.certification_details]);
-
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    SaathiService.getBulkData()
-      .then((data) => setQualificationlist(data))
-      .catch((error) => {
-        console.warn("Not data fetch :(");
-      });
-  }, []);
+    if (userDetails?.certification_details?.is_insurance_exam_passed)
+      SetChangeEvent(
+        userDetails?.certification_details?.is_insurance_exam_passed
+      );
+    if (userDetails?.certification_details?.is_banking_exam_passed)
+      setChange(userDetails?.certification_details?.is_banking_exam_passed);
+  }, [userDetails?.certification_details]);
 
   const [InsuranceExamStatus, setInsuranceExamStatus] = useState("");
   function handelInsuranceExamStatus(InsuranceExamStatus) {
@@ -41,7 +31,6 @@ useEffect(() => {
     SetChangeEvent(InsuranceExamStatus);
   }
 
-  
   const [BankingExamStatus, setBankingExamStatus] = useState("");
 
   function handelBankingExamStatus(BankingExamStatus) {
@@ -60,28 +49,30 @@ useEffect(() => {
     },
   ];
 
-  const [userData, setUserData] = useState();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm({ mode: "onChange" });
-
+  const { register, handleSubmit } = useForm({ mode: "onChange" });
 
   const onSubmit = (data) => {
     SetCorporate(true);
-    setLoading(true)
+    setLoading(true);
 
     localStorage.setItem("userDetail", JSON.stringify(data));
 
     let user_token = localStorage.getItem("token");
     var userId = localStorage.getItem("user-info-id");
-    setUserData(data);
 
     var formdata = new FormData();
-    formdata.append("is_insurance_exam_passed", InsuranceExamStatus === "" ? userDetails?.certification_details?.is_insurance_exam_passed : InsuranceExamStatus);
-    formdata.append("is_banking_exam_passed", BankingExamStatus === "" ? userDetails?.certification_details?.is_banking_exam_passed : BankingExamStatus );
+    formdata.append(
+      "is_insurance_exam_passed",
+      InsuranceExamStatus === ""
+        ? userDetails?.certification_details?.is_insurance_exam_passed
+        : InsuranceExamStatus
+    );
+    formdata.append(
+      "is_banking_exam_passed",
+      BankingExamStatus === ""
+        ? userDetails?.certification_details?.is_banking_exam_passed
+        : BankingExamStatus
+    );
     formdata.append("applicant_id", userId);
 
     for (let a = 0; a < data?.posp_certificate?.length; a++) {
@@ -121,7 +112,6 @@ useEffect(() => {
     fetch(`${Api_Url}/api/certification-details/`, requestOptions)
       .then((r) => r.json())
       .then((result) => {
-      
         if (result.status === 200 || result.status === 201) {
           Swal.fire({
             icon: "success",
@@ -130,23 +120,22 @@ useEffect(() => {
             timer: 1500,
           });
           setCertificate(true);
-          setLoading(false)
+          setLoading(false);
         } else {
           Swal.fire({
             icon: "warning",
             title: result.message,
             timer: 3000,
           });
-          setLoading(false)
+          setLoading(false);
         }
-      
+
         if ("detail" in result) {
           Swal.fire("Please Fill your Application");
           history.push("/");
           return;
         }
-      })
-      
+      });
   };
 
   return (
@@ -154,8 +143,8 @@ useEffect(() => {
       <div className="px-5">
         <div className="login_info pl-0">
           <h2 className="f_p f_600 f_size_24 t_color3 mb_40 mt_20 text-center">
-            Fill the Certification Details in
-            <span className="f_700"> Application</span>
+            Fill the <span className="f_700 orange">Certification Details</span>{" "}
+            in Application
           </h2>
           <div className="">
             <form action="#" className="login-form sign-in-form">
@@ -176,9 +165,22 @@ useEffect(() => {
                       }}
                       options={ExamStatusData}
                       classNamePrefix="select2-selection"
-                      placeholder={!userDetails?.certification_details?.is_insurance_exam_passed ? !userDetails?.certification_details?.is_insurance_exam_passed  ? !userDetails?.certification_details ? 'Select':'No' : "Yes" : 
-                      !userDetails?.certification_details ? 'Select' : !userDetails?.certification_details?.is_insurance_exam_passed ? "No" : "Yes"
-                    }
+                      placeholder={
+                        !userDetails?.certification_details
+                          ?.is_insurance_exam_passed
+                          ? !userDetails?.certification_details
+                              ?.is_insurance_exam_passed
+                            ? !userDetails?.certification_details
+                              ? "Select"
+                              : "No"
+                            : "Yes"
+                          : !userDetails?.certification_details
+                          ? "Select"
+                          : !userDetails?.certification_details
+                              ?.is_insurance_exam_passed
+                          ? "No"
+                          : "Yes"
+                      }
                     />
                   </div>
                 </div>
@@ -192,14 +194,28 @@ useEffect(() => {
                     </label>
                     <Select
                       required
-                      value={BankingExamStatus?.label  }
+                      value={BankingExamStatus?.label}
                       onChange={(BankingExamStatus) => {
                         handelBankingExamStatus(BankingExamStatus.value);
                       }}
                       options={ExamStatusData}
                       classNamePrefix="select2-selection"
-                      placeholder={!userDetails?.certification_details?.is_banking_exam_passed ? !userDetails?.certification_details?.is_banking_exam_passed ? !userDetails?.certification_details ? 'Select' :'No' : "Yes" : 
-                      !userDetails?.certification_details ? 'select' : !userDetails?.certification_details?.is_banking_exam_passed ? "No" : "Yes"}
+                      placeholder={
+                        !userDetails?.certification_details
+                          ?.is_banking_exam_passed
+                          ? !userDetails?.certification_details
+                              ?.is_banking_exam_passed
+                            ? !userDetails?.certification_details
+                              ? "Select"
+                              : "No"
+                            : "Yes"
+                          : !userDetails?.certification_details
+                          ? "select"
+                          : !userDetails?.certification_details
+                              ?.is_banking_exam_passed
+                          ? "No"
+                          : "Yes"
+                      }
                     />
                   </div>
                 </div>
@@ -215,7 +231,7 @@ useEffect(() => {
                     accept="image/*,.pdf"
                     name="posp_certificate"
                     {...register("posp_certificate", {
-                      disabled: !changeEvent  ? true : false,
+                      disabled: !changeEvent ? true : false,
                     })}
                   />
                   <small>(image or Pdf Format Only)</small>{" "}
@@ -263,10 +279,10 @@ useEffect(() => {
                   className="saved_btn"
                   onClick={handleSubmit(onSubmit)}
                 >
-                  {userDetails?.certification_details === null 
-                      ? "Save"
-                      : "Update"}
-                       &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
+                  {userDetails?.certification_details === null
+                    ? "Save"
+                    : "Update"}
+                  &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
                 </button>
               </div>
             </form>

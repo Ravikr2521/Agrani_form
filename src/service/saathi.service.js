@@ -1,14 +1,9 @@
-// import accessToken from "../helpers/jwt-token-access/accessToken";
 import axios from "axios";
-//pass new generated access token here
-// const token = accessToken
+
 const token =
   "WyIyIiwiJDUkcm91bmRzPTUzNTAwMCRSSE1wOERQM25HU1c5UjRnJHdPZTdmcW02SmtDckc3TVp3U25yOXQwYUdoNzBSb3BOUHZwZldWU052bTgiXQ.YzWIjA.n7mu5dMCUjmqVlNvmfmYQfjcfmU";
 
-
-const baseUrl = "https://api-prod.agrani.io/";
-
-
+const baseUrl = "https://vaaradhi.agrani.tech/api/v1/";
 
 const axiosApi = axios.create({
   baseURL: baseUrl,
@@ -32,8 +27,6 @@ export const SaathiService = {
   getMasterBankData,
   getMasterBranchesData,
   updateFarmer,
-  
- 
 };
 
 // Master Data Call  Mathed
@@ -57,13 +50,13 @@ export async function getMasterstateData(config = {}) {
 // Master Districts Data Call  Mathed
 export async function getMasterdistrictsData(did, config = {}) {
   return await axiosApi
-    .get(`/master/states/${did}/districts`, { ...config })
+    .get(`/master/districts?state_code=${did}`, { ...config })
     .then((response) => response.data);
 }
 // Master Blocks Data Call  Mathed
 export async function getMasterblocksData(blockid, config = {}) {
   return await axiosApi
-    .get(`/master/districts/${blockid}/blocks`, { ...config })
+    .get(`/master/blocks?district_code=${blockid}`, { ...config })
     .then((response) => response.data);
 }
 
@@ -74,11 +67,10 @@ export async function getMastervillagesData(vid, config = {}) {
     .then((response) => response.data);
 }
 
-
 // Master Bank Data Call Mathed
 export async function getMBankwithifsc(Ifsccode, config = {}) {
   return await axiosApi
-    .get(`/master/bank_master/${Ifsccode}`, { ...config })
+    .get(`/master/bank_branches?q=${Ifsccode}`, { ...config })
     .then((response) => response.data);
 }
 
