@@ -377,7 +377,7 @@ const Login = () => {
                     <div className="w-100 mt-lg-0 mt-3">
                       <button
                         id="sendotp"
-                        type="submiit"
+                        type="button"
                         onClick={(e) => sendOtp()}
                         name="otp_code"
                         className="otp_btn mb-2 w-100"
