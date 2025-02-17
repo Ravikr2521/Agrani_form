@@ -346,7 +346,7 @@ const Login = () => {
           {Verify === true ? (
             " "
           ) : (
-            <h5 className=" f_600 my-4   text-center ">Login With Mobile</h5>
+            <h5 className=" f_600 my-4  text-center ">Login With Mobile</h5>
           )}
           <form action="#" className="login-form sign-in-form">
             <div className="d-flex flex-column justify-content-center align-items-center">
@@ -379,7 +379,6 @@ const Login = () => {
                         id="sendotp"
                         type="button"
                         onClick={(e) => sendOtp()}
-                        name="otp_code"
                         className="otp_btn mb-2 w-100"
                         disabled={!phoneNumber}
                       >
