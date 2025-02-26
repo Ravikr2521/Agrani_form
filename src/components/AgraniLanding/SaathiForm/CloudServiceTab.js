@@ -38,7 +38,7 @@ const CloudServiceTab = ({ urlid }) => {
   var Api_Url = process.env.REACT_APP_API_URL;
   const applicaintId = localStorage.getItem("user-info-id");
 
-  const [checked, setChecked] = useState(userDetails?.is_agreed);
+  const [checked, setChecked] = useState(userDetails?.is_agreed || false);
   const [downloadUrl, setdownloadUrl] = useState("");
   const [Verify, setVerify] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -66,6 +66,11 @@ const CloudServiceTab = ({ urlid }) => {
   } = useForm({ mode: "onChange" });
 
   const onSubmit = () => {
+    if (checked === false) {
+      Swal.fire("Please Check Terms and Conditions");
+      setLoading(false);
+      return;
+    }
     SetCorporate(true);
     setLoading(true);
     let user_token = localStorage.getItem("token");
@@ -113,7 +118,7 @@ const CloudServiceTab = ({ urlid }) => {
       .catch((error) => {
         Swal.fire({
           icon: "warning",
-          title: "Server is not responding",
+          title: "Something Went Wrong",
           timer: 1500,
         });
         setLoading(false);

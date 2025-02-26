@@ -39,8 +39,16 @@ const KycDetails = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({ mode: "onChange" });
+
+  useEffect(() => {
+    reset({
+      dateOfBirth: userDetails?.personal_details?.dateOfBirth,
+      lastName: userDetails?.lastName,
+    });
+  }, [userDetails]);
 
   const customStyles = {
     control: (base) => ({
@@ -403,12 +411,15 @@ const KycDetails = () => {
                     onChange={(e) => {
                       setDate(e.target.value);
                     }}
+                    {...register("dateOfBirth", {
+                      required: "DOB is required.",
+                    })}
                     // defaultValue={userDetails?.personal_details?.dateOfBirth }
                   />
+                  {errors.dateOfBirth && (
+                    <p className="m input-error">Please fill DOB</p>
+                  )}
                 </div>
-                {errors.dateOfBirth && (
-                  <p className="m input-error">Please fill DOB</p>
-                )}
 
                 <div className="col-lg-6 form-check text_box">
                   <label className="f_p text_c f_400 m-0 mb-1">
