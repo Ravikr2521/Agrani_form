@@ -68,8 +68,19 @@ const BankDetails = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm({ mode: "onChange" });
+  } = useForm();
+
+  useEffect(() => {
+    reset({
+      account_holder_name: userDetails?.bank_details?.account_holder_name || "",
+      account_number: userDetails?.bank_details?.account_number || "",
+      ifsc_code: userDetails?.bank_details?.ifsc_code || "",
+      bank_name: userDetails?.bank_details?.bank_name || "",
+      bank_branch: userDetails?.bank_details?.bank_branch || "",
+    });
+  }, [userDetails]);
 
   const onSubmit = (data) => {
     setLoading(true);
@@ -105,7 +116,7 @@ const BankDetails = () => {
       selectedValue.branch_name || userDetails?.bank_details?.bank_branch
     );
 
-    for (let a = 0; a < data.bank_document.length; a++) {
+    for (let a = 0; a < data?.bank_document?.length; a++) {
       formdata.append("bank_document", data.bank_document[a]);
     }
 
@@ -113,9 +124,9 @@ const BankDetails = () => {
     formdata.append("ui_section_id", "4");
     formdata.append("created_by", "0");
     formdata.append("created_by_name", "Self");
-    for (var pair of formdata.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
+    // for (var pair of formdata.entries()) {
+    //   console.log(pair[0] + ", " + pair[1]);
+    // }
 
     var requestOptions = {
       method: "POST",
@@ -173,12 +184,11 @@ const BankDetails = () => {
                     name="account_holder_name"
                     type="text"
                     placeholder="Enter Account Holder Name"
-                    required={
-                      !userDetails?.bank_details?.account_holder_name
-                        ? true
-                        : false
-                    }
-                    {...register("account_holder_name", {})}
+                    {...register("account_holder_name", {
+                      required: userDetails?.bank_details?.account_holder_name
+                        ? false
+                        : "Name Required",
+                    })}
                     defaultValue={
                       userDetails?.bank_details?.account_holder_name
                     }
@@ -196,10 +206,9 @@ const BankDetails = () => {
                     name="account_number"
                     type="text"
                     placeholder="Enter Account No."
-                    required={
-                      !userDetails?.bank_details?.account_number ? true : false
-                    }
-                    {...register("account_number", {})}
+                    {...register("account_number", {
+                      required: "Account number is required",
+                    })}
                     defaultValue={userDetails?.bank_details?.account_number}
                   />
                   {errors.account_number && (
@@ -214,7 +223,12 @@ const BankDetails = () => {
                       <small style={{ color: "#ff0000" }}>*</small>
                     </label>
                     <Select
-                      {...register("account_type")}
+                      {...register("account_type", {
+                        required:
+                          AccountType || userDetails?.bank_details?.account_type
+                            ? false
+                            : "Account type is required",
+                      })}
                       value={
                         AccountType === undefined
                           ? AccountType
@@ -239,7 +253,12 @@ const BankDetails = () => {
                       <small style={{ color: "#ff0000" }}>*</small>
                     </label>
                     <AsyncSelect
-                      {...register("ifsc_code")}
+                      {...register("ifsc_code ", {
+                        required:
+                          !selectedValue &&
+                          !userDetails?.bank_details?.ifsc_code &&
+                          `Select IFSC Code `,
+                      })}
                       cacheOptions
                       defaultOptions
                       name="ifsc_code"

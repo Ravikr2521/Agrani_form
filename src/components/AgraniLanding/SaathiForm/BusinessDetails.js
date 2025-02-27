@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-//Import Flatepicker
+import React, { useEffect, useState } from "react";
 import "flatpickr/dist/themes/confetti.css";
 import { Spinner } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import Select from "react-select";
 import Swal from "sweetalert2";
@@ -17,30 +16,31 @@ const BusinessDetails = () => {
   const MasterDropDown = dropdownData?.data?.results[0];
 
   const [loading, setLoading] = useState(false);
-
-  const [IncomeSource, setIncomeSource] = useState([]);
-  function handleIncomeSource(IncomeSource) {
-    setIncomeSource(IncomeSource);
-  }
+  const [IncomeSource, setIncomeSource] = useState(
+    userDetails?.business_details?.income_source || ""
+  );
+  const [professionaltraining, setProfessionalTraining] = useState(
+    Boolean(
+      userDetails?.business_details
+        ?.is_professional_training_insurance_and_bank_product
+    )
+  );
+  const [interestInSelling, setInterestInSelling] = useState(
+    userDetails?.business_details?.interest_in_selling || ""
+  );
 
   const IncomeListData = [
     {
       label: "Income Source",
       options:
-        MasterDropDown &&
-        MasterDropDown?.income_type.map((Income) => ({
+        MasterDropDown?.income_type?.map((Income) => ({
           label: `${Income}`,
           value: `${Income}`,
-        })),
+        })) || [],
     },
   ];
 
-  const [professionaltraining, setprofessionaltraining] = useState([]);
-  function handelprofessionaltraining(professionaltraining) {
-    setprofessionaltraining(professionaltraining);
-  }
-  // ExamStatusData selectbox
-  const PlicyData = [
+  const PolicyData = [
     {
       label: "Status",
       options: [
@@ -50,7 +50,37 @@ const BusinessDetails = () => {
     },
   ];
 
-  const { register, handleSubmit } = useForm({ mode: "onChange" });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm({ mode: "onChange" });
+
+  useEffect(() => {
+    reset({
+      experience_in_insurance:
+        userDetails?.experiences?.experience_in_insurance || false,
+      experience_in_banking:
+        userDetails?.experiences?.experience_in_banking || false,
+      experience_in_agri_input:
+        userDetails?.experiences?.experience_in_agri_input || false,
+      experience_in_agri_output:
+        userDetails?.experiences?.experience_in_agri_output || false,
+      interest_in_selling: userDetails?.business_details?.interest_in_selling,
+    });
+    setIncomeSource(userDetails?.business_details?.income_source || "");
+    if (userDetails?.business_details) {
+      setProfessionalTraining(
+        userDetails?.business_details
+          ?.is_professional_training_insurance_and_bank_product || false
+      );
+      setInterestInSelling(
+        userDetails?.business_details?.interest_in_selling || ""
+      );
+    }
+  }, [userDetails]);
 
   const onSubmit = (data) => {
     SetCorporate(true);
@@ -64,45 +94,39 @@ const BusinessDetails = () => {
     var temp = [
       data.experience_in_insurance,
       data.experience_in_banking,
-      data.experience_in_agrani_input,
-      data.experience_in_agrani_output,
+      data.experience_in_agri_input,
+      data.experience_in_agri_output,
     ];
 
-    if (temp.indexOf(true) == -1) {
+    if (temp.indexOf(true) === -1) {
       Swal.fire({
         icon: "warning",
-        title: "please select atleast one Experience",
+        title: "Please select at least one Experience",
         timer: 3000,
       });
+      setLoading(false);
     } else {
       formdata.append("source_of_income", IncomeSource);
-      formdata.append(
-        "income",
-        data.income || userDetails?.business_details?.income
-      );
+      formdata.append("income", data.income);
       formdata.append("experience_in_insurance", data.experience_in_insurance);
       formdata.append("experience_in_banking", data.experience_in_banking);
       formdata.append(
         "experience_in_agrani_input",
-        data.experience_in_agrani_input
+        data.experience_in_agri_input
       );
       formdata.append(
         "experience_in_agrani_output",
-        data.experience_in_agrani_output
+        data.experience_in_agri_output
       );
       formdata.append(
         "is_professional_training_insurance_and_bank_product",
         professionaltraining
       );
-      formdata.append("interest_in_selling", data.interest_in_selling);
+      formdata.append("interest_in_selling", interestInSelling);
       formdata.append("applicant_id", userId);
       formdata.append("ui_section_id", "6");
       formdata.append("created_by_name", "Self");
       formdata.append("created_by", "0");
-
-      for (var pair of formdata.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
-      }
 
       var requestOptions = {
         method: "POST",
@@ -114,32 +138,20 @@ const BusinessDetails = () => {
       fetch(`${Api_Url}/api/business-details/`, requestOptions)
         .then((r) => r.json())
         .then((result) => {
-          if (result.status === 200 || result.status === 201) {
-            Swal.fire({
-              icon: "success",
-              title: result.message,
-              timer: 1500,
-            });
-            setBusiness(true);
-            setLoading(false);
-          } else {
-            Swal.fire({
-              icon: "warning",
-              title: result.message,
-              buttons: false,
-              timer: 3000,
-            });
-            setLoading(false);
-          }
-
-          if ("detail" in result) {
-            Swal.fire("Please Fill your Application");
-            history.push("/");
-            return;
-          }
+          Swal.fire({
+            icon:
+              result.status === 200 || result.status === 201
+                ? "success"
+                : "warning",
+            title: result.message,
+            timer: 1500,
+          });
+          setBusiness(result.status === 200 || result.status === 201);
+          setLoading(false);
         });
     }
   };
+
   return (
     <section className="sign_in_area col-lg-12">
       <div className="px-5">
@@ -148,203 +160,156 @@ const BusinessDetails = () => {
             Fill the <span className="f_700 orange">Business Details</span> in
             Application
           </h2>
-          <div className="">
-            <form
-              action="#"
-              className="login-form sign-in-form"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div className="row">
-                <div className="col-lg-6 form-group text_box">
-                  <div className="mb-3">
-                    <label className="f_p text_c f_400">
-                      Select Primary Source of Income{" "}
-                      <small style={{ color: "#ff0000" }}>*</small>
-                    </label>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="row">
+              <div className="col-lg-6 form-group text_box">
+                <label className="f_p text_c f_400">
+                  Select Primary Source of Income{" "}
+                  <small style={{ color: "#ff0000" }}>*</small>
+                </label>
+                <Controller
+                  name="source_of_income"
+                  control={control}
+                  rules={{
+                    required:
+                      !IncomeSource &&
+                      !userDetails?.business_details?.income_source &&
+                      `This field is required`,
+                  }}
+                  render={({ field }) => (
                     <Select
-                      {...register("source_of_income")}
-                      value={
-                        IncomeListData === undefined
-                          ? IncomeSource
-                          : IncomeSource.label
-                      }
-                      onChange={(IncomeSource) => {
-                        handleIncomeSource(IncomeSource.label);
+                      {...field}
+                      value={IncomeListData[0]?.options.find(
+                        (option) => option.label === IncomeSource
+                      )}
+                      onChange={(selectedOption) => {
+                        setIncomeSource(selectedOption.label);
+                        field.onChange(selectedOption.label);
                       }}
                       options={IncomeListData}
                       classNamePrefix="select2-selection"
-                      // placeholder={userDetails?.business_details?.income_source}
-                    />
-                  </div>
-                </div>
-
-                <div className="col-lg-6 form-group text_box">
-                  <label className="f_p text_c f_400">
-                    Anual Income
-                    <small style={{ color: "#ff0000" }}>*</small>
-                  </label>
-                  <input
-                    name="income"
-                    type="text"
-                    placeholder="Enter income"
-                    required
-                    {...register("income")}
-                    defaultValue={userDetails?.business_details?.income}
-                  />
-                </div>
-
-                <div className="col-lg-12 form-group mb-4">
-                  <label className="f_p text_c f_400">Experience in : </label>
-
-                  <div className="col-lg-7 form-check text_box d-flex flex-lg-row flex-column justify-content-between  ">
-                    <div className="form-check ">
-                      <input
-                        {...register("experience_in_insurance")}
-                        className="form-check-input mt-2"
-                        type="checkbox"
-                        name="experience_in_insurance"
-                        id="ExperienceinInsurance "
-                      />
-                      <label className="form-check-label" htmlFor="Yes">
-                        Insurance
-                      </label>
-                    </div>
-
-                    <div className="form-check">
-                      <input
-                        {...register("experience_in_banking")}
-                        className="form-check-input mt-2"
-                        type="checkbox"
-                        name="experience_in_banking"
-                      />
-                      <label className="form-check-label" htmlFor="Yes">
-                        Banking
-                      </label>
-                    </div>
-
-                    <div className="form-check">
-                      <input
-                        {...register("experience_in_agrani_input")}
-                        className="form-check-input mt-2"
-                        type="checkbox"
-                        name="experience_in_agrani_input"
-                      />
-
-                      <label className="form-check-label" htmlFor="Yes">
-                        Agri input
-                      </label>
-                    </div>
-
-                    <div className="form-check">
-                      <input
-                        {...register("experience_in_agrani_output")}
-                        className="form-check-input mt-2"
-                        type="checkbox"
-                        name="experience_in_agrani_output"
-                      />
-                      <label className="form-check-label" htmlFor="Yes">
-                        Agri output
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-lg-12 form-group text_box">
-                  <div className="mb-3">
-                    <label className="f_p text_c f_400">
-                      Have you taken professional training for insurance or
-                      banking products{" "}
-                      <small style={{ color: "#ff0000" }}>*</small>
-                    </label>
-                    <Select
-                      {...register(
-                        "is_professional_training_insurance_and_bank_product"
-                      )}
-                      value={
-                        professionaltraining === undefined
-                          ? professionaltraining
-                          : professionaltraining.label
+                      placeholder={
+                        IncomeSource ||
+                        userDetails?.business_details?.income_source ||
+                        "Select"
                       }
-                      onChange={(professionaltraining) => {
-                        handelprofessionaltraining(professionaltraining.value);
-                      }}
-                      options={PlicyData}
-                      classNamePrefix="select2-selection"
-                      // placeholder={userDetails?.business_details?.is_professional_training_insurance_and_bank_product === false ? "No" : "Yes"}
                     />
-                  </div>
-                </div>
+                  )}
+                />
+                {errors.source_of_income && (
+                  <small style={{ color: "red" }}>
+                    {errors.source_of_income.message}
+                  </small>
+                )}
+              </div>
 
-                <div className="col-lg-12 form-check text_box">
-                  <label className="f_p text_c f_400">
-                    You are interested in selling{" "}
-                    <small style={{ color: "#ff0000" }}>*</small>
-                  </label>
-                  <div className="col-lg-12 p-0">
-                    <div className="form-check form-check-inline">
-                      <input
-                        {...register("interest_in_selling")}
-                        name="interestedinselling"
-                        type="radio"
-                        value="InsuranceProducts"
-                        defaultChecked
-                        readOnly
-                      />
-                      <label
-                        htmlFor="InsuranceProducts"
-                        className="f_p text_c f_400 ml-3 mb-0"
-                      >
-                        Insurance Products
-                      </label>
-                    </div>
+              <div className="col-lg-6 form-group text_box">
+                <label className="f_p text_c f_400">
+                  Annual Income <small style={{ color: "#ff0000" }}>*</small>
+                </label>
+                <input
+                  name="income"
+                  type="text"
+                  defaultValue={userDetails?.business_details?.income || ""}
+                  placeholder="Enter income"
+                  required
+                  {...register("income")}
+                />
+              </div>
 
-                    <div className="form-check form-check-inline">
-                      <input
-                        {...register("interest_in_selling")}
-                        name="interestedinselling"
-                        type="radio"
-                        value="BankingProducts"
-                        readOnly
-                      />
-                      <label
-                        htmlFor="BankingProducts"
-                        className="f_p text_c f_400 ml-3 mb-0"
-                      >
-                        Banking Products
-                      </label>
-                    </div>
-
-                    <div className="form-check form-check-inline">
-                      <input
-                        {...register("interest_in_selling")}
-                        name="interestedinselling"
-                        type="radio"
-                        value="Both"
-                        readOnly
-                      />
-                      <label
-                        htmlFor="Both"
-                        value="both"
-                        className="f_p text_c f_400 ml-3 mb-0"
-                      >
-                        Both
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-lg-4 m-auto pb-5 justify-content-center text-center">
-                  <button type="submit" className="saved_btn">
-                    {userDetails?.business_details === null ? "Save" : "Update"}
-                    &nbsp; {loading ? <Spinner size="sm"></Spinner> : ""}
-                  </button>
+              <div className="col-lg-12 form-group mb-4">
+                <label className="f_p text_c f_400">Experience in: </label>
+                <div className="d-flex flex-wrap gap-3 align-items-center">
+                  {["insurance", "banking", "agri_input", "agri_output"].map(
+                    (field) => (
+                      <div key={field} className="form-check mx-2">
+                        <input
+                          {...register(`experience_in_${field}`)}
+                          className="form-check-input mt-2"
+                          type="checkbox"
+                        />
+                        <label className="form-check-label">
+                          {field.replace("_", " ")}
+                        </label>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
-            </form>
-          </div>
+
+              <div className="col-lg-12 form-group text_box">
+                <label className="f_p text_c f_400">
+                  Professional Training{" "}
+                  <small style={{ color: "#ff0000" }}>*</small>
+                </label>
+                <Controller
+                  name="is_professional_training_insurance_and_bank_product"
+                  rules={{
+                    required:
+                      Object.keys(userDetails?.business_details || {})
+                        .length === 0 && `This field is required`,
+                  }}
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      value={PolicyData[0]?.options.find(
+                        (option) => option.value === professionaltraining
+                      )}
+                      onChange={(selectedOption) => {
+                        setProfessionalTraining(selectedOption.value);
+                        field.onChange(selectedOption.value);
+                      }}
+                      options={PolicyData}
+                      classNamePrefix="select2-selection"
+                    />
+                  )}
+                />
+              </div>
+
+              <div className="col-lg-12 form-check text_box">
+                <label className="f_p text_c f_400">
+                  You are interested in selling{" "}
+                  <small style={{ color: "#ff0000" }}>*</small>
+                </label>
+                <div className="col-lg-12 p-0">
+                  {["InsuranceProducts", "BankingProducts", "Both"].map(
+                    (option) => (
+                      <div
+                        className="form-check form-check-inline"
+                        key={option}
+                      >
+                        <input
+                          {...register("interest_in_selling", {
+                            required: "This field is required",
+                          })}
+                          name="interest_in_selling"
+                          type="radio"
+                          value={option}
+                          checked={option === interestInSelling}
+                          onChange={(e) => setInterestInSelling(e.target.value)}
+                        />
+                        <label className="f_p text_c f_400 ml-3 mb-0">
+                          {option.replace(/([A-Z])/g, " $1").trim()}
+                        </label>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+
+              <div className="col-lg-4 m-auto pb-5 text-center">
+                <button type="submit" className="saved_btn">
+                  {userDetails?.business_details ? "Update" : "Save"}{" "}
+                  {loading && <Spinner size="sm" />}
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </section>
   );
 };
+
 export default BusinessDetails;

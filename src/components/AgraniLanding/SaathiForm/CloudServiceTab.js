@@ -32,6 +32,7 @@ const CloudServiceTab = ({ urlid }) => {
     SetCorporate,
     loginModal,
     userDetails,
+    setUserDetails,
   } = CryptoState();
   // console.log(userDetails , "userDetails")
   const history = useHistory();
@@ -174,7 +175,7 @@ const CloudServiceTab = ({ urlid }) => {
     }
   }, []);
 
-  const [userData, setUserData] = useState(undefined);
+  // const [userData, setUserData] = useState(undefined);
 
   var user_id = localStorage.getItem("user-info-id");
 
@@ -192,7 +193,7 @@ const CloudServiceTab = ({ urlid }) => {
       .then((res) => res.json())
       .then((data) => {
         if (Object.keys(data?.data || {}).length != 0) {
-          setUserData(data?.data);
+          setUserDetails(data?.data);
           setCurrentSection(
             (parseInt(data?.data?.ui_section_id) + 1).toString()
           );

@@ -15,25 +15,26 @@ const KycDetails = () => {
     dropdownData,
   } = CryptoState();
   const Api_Url = process.env.REACT_APP_API_URL;
-  const [date, setDate] = useState();
-  const [MaritalStatus, setMaritalStatus] = useState();
+  const [date, setDate] = useState("");
+  const [MaritalStatus, setMaritalStatus] = useState("");
   const [OccupationName, setOccupationName] = useState("");
-  const [Relationship, setRelationship] = useState();
+  const [Relationship, setRelationship] = useState("");
   // const [OccupationId, setOccupationId] = useState("");
   const [OtherDocName, setOtherDocName] = useState([]);
-  const [StatesCode, setStatesCode] = useState(null);
-  const [StateName, setStateName] = useState(null);
-  const [DistrictCode, setDistrictCode] = useState(null);
-  const [DistrictName, setDistrictName] = useState(null);
-  const [BlockCode, setBlockCode] = useState(null);
-  const [BlockName, setBlockName] = useState(null);
+  const [StatesCode, setStatesCode] = useState("");
+  const [StateName, setStateName] = useState("");
+  const [DistrictCode, setDistrictCode] = useState("");
+  const [DistrictName, setDistrictName] = useState("");
+  const [BlockCode, setBlockCode] = useState("");
+  const [BlockName, setBlockName] = useState("");
   const [DistrictList, setDistrictList] = useState([]);
   const [BlockList, setBlockList] = useState([]);
   const [statedatalist, setstatedatalist] = useState({});
-  const [changeEvent, SetChangeEvent] = useState(null);
-  const [isDisabled, setIsDisabled] = useState(null);
+  const [changeEvent, SetChangeEvent] = useState("");
+  const [isDisabled, setIsDisabled] = useState("");
   const [loading, setLoading] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [value, setValue] = useState("");
 
   const MasterDropDown = dropdownData?.data?.results[0];
   const {
@@ -45,8 +46,7 @@ const KycDetails = () => {
 
   useEffect(() => {
     reset({
-      dateOfBirth: userDetails?.personal_details?.dateOfBirth,
-      lastName: userDetails?.lastName,
+      gender: userDetails?.personal_details?.gender,
     });
   }, [userDetails]);
 
@@ -225,10 +225,16 @@ const KycDetails = () => {
     }
   }, [StatesCode, DistrictCode, BlockCode]);
 
+  const handleDateChange = (e) => {
+    const selectedDate = e.target.value;
+    setDate(selectedDate);
+    setValue("dateOfBirth", selectedDate);
+  };
+
   const onSubmit = (data) => {
     setLoading(true);
     SetCorporate(true);
-    data["dateOfBirth"] = date;
+    // data["dateOfBirth"] = date;
     localStorage.setItem("userDetail", JSON.stringify(data));
     let user_token = localStorage.getItem("token");
     const User_Mobile = localStorage.getItem("phone_number");
@@ -377,9 +383,8 @@ const KycDetails = () => {
             timer: 3000,
           });
           setLoading(false);
+          return;
         }
-        // if(result.status===200) {
-        // document.getElementById("save_btn").disabled=true }
       })
       .catch((err) => {
         console.log(err);
@@ -403,19 +408,22 @@ const KycDetails = () => {
                   <label className="f_p text_c f_400 m-0 mb-1">
                     Date Of Birth <small style={{ color: "#ff0000" }}>*</small>
                   </label>
-
                   <input
                     className="form-control d-block w"
                     name="dateOfBirth"
                     type="date"
-                    onChange={(e) => {
-                      setDate(e.target.value);
-                    }}
+                    onChange={handleDateChange}
+                    // value={date}
                     {...register("dateOfBirth", {
-                      required: "DOB is required.",
+                      required:
+                        date || userDetails?.personal_details?.dateOfBirth
+                          ? false
+                          : "DOB is required",
                     })}
-                    // defaultValue={userDetails?.personal_details?.dateOfBirth }
-                  />
+                    defaultValue={
+                      userDetails?.personal_details?.dateOfBirth || ""
+                    }
+                  />{" "}
                   {errors.dateOfBirth && (
                     <p className="m input-error">Please fill DOB</p>
                   )}
@@ -432,7 +440,6 @@ const KycDetails = () => {
                         id="male"
                         type="radio"
                         value="male"
-                        defaultChecked
                         readOnly
                         {...register("gender")}
                       />
@@ -485,12 +492,18 @@ const KycDetails = () => {
                       <small style={{ color: "#ff0000" }}>*</small>
                     </label>
                     <Select
-                      required
-                      value={
-                        MaritalStatus === undefined
-                          ? MaritalStatus
-                          : MaritalStatus.value
-                      }
+                      {...register("maritalstatus", {
+                        required:
+                          MaritalStatus ||
+                          userDetails?.personal_details?.martialStatus
+                            ? false
+                            : "Marital Status required.",
+                      })}
+                      // value={
+                      //   MaritalStatus === undefined
+                      //     ? MaritalStatus
+                      //     : MaritalStatus.value
+                      // }
                       onChange={(MaritalStatus) => {
                         handleMaritalStatus(MaritalStatus.value);
                       }}
@@ -502,6 +515,11 @@ const KycDetails = () => {
                       className="select_box"
                       styles={customStyles}
                     />
+                    {/* {errors.maritalstatus && (
+                      <p className="m-0 input-error">
+                        {errors.maritalstatus.message}
+                      </p>
+                    )} */}
                   </div>
                 </div>
                 <div className="col-lg-6 form-group text_box">
@@ -511,7 +529,13 @@ const KycDetails = () => {
                       <small style={{ color: "#ff0000" }}>*</small>
                     </label>
                     <Select
-                      {...register("occupation", {})}
+                      {...register("occupation", {
+                        required:
+                          OccupationName ||
+                          userDetails?.personal_details?.occupation
+                            ? false
+                            : "Occupation required.",
+                      })}
                       value={
                         OccupationName === undefined
                           ? OccupationName
@@ -545,7 +569,12 @@ const KycDetails = () => {
                     </label>
 
                     <Select
-                      required
+                      {...register("state", {
+                        required:
+                          StateName || userDetails?.personal_details?.state
+                            ? false
+                            : "State required.",
+                      })}
                       value={
                         StatesCode === null ? StatesCode : StatesCode.label
                       }
@@ -568,7 +597,13 @@ const KycDetails = () => {
                       <small style={{ color: "#ff0000" }}>*</small>
                     </label>
                     <Select
-                      {...register("district")}
+                      {...register("district", {
+                        required:
+                          DistrictName ||
+                          userDetails?.personal_details?.district
+                            ? false
+                            : "district required.",
+                      })}
                       value={
                         DistrictCode === null
                           ? DistrictCode
@@ -595,7 +630,13 @@ const KycDetails = () => {
                     </label>
 
                     <Select
-                      {...register("city")}
+                      {...register("block", {
+                        required:
+                          BlockName || userDetails?.personal_details?.city
+                            ? false
+                            : true,
+                        message: "Please Select Block",
+                      })}
                       value={BlockCode === null ? BlockCode : BlockCode.label}
                       onChange={(BlockCode) => {
                         handleBlockCode(BlockCode);
@@ -606,6 +647,9 @@ const KycDetails = () => {
                       }
                       classNamePrefix="select2-selection"
                     />
+                    {errors.BlockName && (
+                      <p className="m input-error">Select Block</p>
+                    )}
                   </div>
                 </div>
 
@@ -618,21 +662,29 @@ const KycDetails = () => {
                     name="pincode"
                     type="text"
                     placeholder="Pincode"
-                    required={
-                      !userDetails?.personal_details?.pincode ? true : false
-                    }
                     {...register("pincode", {
-                      minLength: 6,
-                      maxLength: 7,
+                      required: userDetails?.personal_details?.pincode
+                        ? false
+                        : "Pincode required",
+                      minLength: {
+                        value: 6,
+                        message: "Pincode must be at least 6 digits",
+                      },
+                      maxLength: {
+                        value: 6,
+                        message: "Pincode cannot exceed 6 digits",
+                      },
+                      pattern: {
+                        value: /^[0-9]+$/,
+                        message: "Only numbers are allowed",
+                      },
                     })}
-                    defaultValue={
-                      userDetails ? userDetails?.personal_details?.pincode : ""
-                    }
+                    defaultValue={userDetails?.personal_details?.pincode || ""}
                   />
-                  {errors?.pincode !== null ||
-                    (errors.pincode !== "undefined" && (
-                      <p className="m input-error">Enter pin code</p>
-                    ))}
+
+                  {errors.pincode && (
+                    <p className="m input-error">{errors.pincode.message}</p>
+                  )}
                 </div>
 
                 <div className="col-lg-6 form-group text_box">
@@ -645,19 +697,16 @@ const KycDetails = () => {
                     type="text"
                     placeholder="Enter Address"
                     defaultValue={userDetails?.personal_details?.address}
-                    required={
-                      !userDetails?.personal_details?.address ? true : false
-                    }
                     {...register("address", {
-                      pattern: {
-                        value: /[A-Za-z]/,
-                      },
+                      required: userDetails?.personal_details?.pincode
+                        ? false
+                        : true,
+                      message: "Address Required",
                     })}
                   />
-                  {errors.address !== null ||
-                    (errors.address !== "undefined" && (
-                      <p className="m input-error">please enter address</p>
-                    ))}
+                  {errors.address && (
+                    <p className="m input-error">Address Required</p>
+                  )}
                 </div>
               </div>
 
@@ -679,16 +728,16 @@ const KycDetails = () => {
                     name="noOfMember"
                     type="number"
                     placeholder="Enter Number "
-                    required={
-                      !userDetails?.personal_details?.noOfMember ? true : false
-                    }
-                    {...register("noOfMember", {})}
+                    {...register("noOfMember", {
+                      required: userDetails?.personal_details?.noOfMember
+                        ? false
+                        : "Number of nominee required",
+                    })}
                     defaultValue={userDetails?.personal_details?.noOfMember}
                   />
-                  {errors.noOfMember !== null ||
-                    (errors.noOfMember !== "undefined" && (
-                      <p className="m input-error">Enter No. of member</p>
-                    ))}
+                  {errors?.noOfMember && (
+                    <p className="m input-error">Enter No. of member</p>
+                  )}
                 </div>
 
                 <div className=" col-lg-6 form-group text_box">
@@ -699,12 +748,13 @@ const KycDetails = () => {
                     className="form-control"
                     name="nomineeName"
                     type="text"
-                    required={
-                      !userDetails?.personal_details?.noOfMember ? true : false
-                    }
                     placeholder="Enter Nominee Name"
-                    {...register("nomineeName", {})}
-                    defaultValue={userDetails?.personal_details?.noOfMember}
+                    {...register("nomineeName", {
+                      required: userDetails?.personal_details?.nomineeName
+                        ? false
+                        : "Nominee name is required",
+                    })}
+                    defaultValue={userDetails?.personal_details?.nomineeName}
                   />
                   {errors.nomineeName !== null ||
                     (errors.nomineeName !== "undefined" && (
@@ -722,7 +772,13 @@ const KycDetails = () => {
                     </label>
                     <Select
                       required
-                      {...register("nomineeRelationship", {})}
+                      {...register("nomineeRelationship", {
+                        required:
+                          Relationship ||
+                          userDetails?.personal_details?.nomineeRelationship
+                            ? false
+                            : "Relationship Required",
+                      })}
                       value={
                         Relationship === undefined
                           ? Relationship
@@ -757,12 +813,10 @@ const KycDetails = () => {
                     type="number"
                     placeholder="Enter Aadhar Number"
                     defaultValue={userDetails?.personal_details?.aadharNumber}
-                    required={
-                      !userDetails?.personal_details?.aadharNumber
-                        ? true
-                        : false
-                    }
                     {...register("aadharNumber", {
+                      required: userDetails?.personal_details?.aadharNumber
+                        ? false
+                        : "Aadhar number required",
                       maxLength: 12,
                       minLength: 12,
                     })}
@@ -786,6 +840,9 @@ const KycDetails = () => {
                       !userDetails?.personal_details?.panNumber ? true : false
                     }
                     {...register("panNumber", {
+                      required: userDetails?.personal_details?.panNumber
+                        ? false
+                        : "Pan number required",
                       maxLength: 10,
                       minLength: 10,
                     })}

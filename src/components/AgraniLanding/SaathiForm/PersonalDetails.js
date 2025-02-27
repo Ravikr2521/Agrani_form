@@ -15,7 +15,7 @@ const PersonalDetails = () => {
   const [loading, setLoading] = useState(false);
   // localStorage.getItem("userDetail");
 
-  console.log(userDetails, "heyyy");
+  // console.log(userDetails, "heyyy");
 
   const {
     register,
@@ -181,7 +181,7 @@ const PersonalDetails = () => {
                     })}
                   />
                   {errors.firstName && (
-                    <p className="m-0 input-error">
+                    <p className="m-1 input-error">
                       {errors.firstName.message}
                     </p>
                   )}

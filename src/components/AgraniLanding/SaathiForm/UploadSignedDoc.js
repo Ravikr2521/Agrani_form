@@ -21,56 +21,56 @@ const UploadSignedDoc = () => {
     setLoader(true);
 
     if (selectedFile === "") {
-      swal("!!", {
-        buttons: false,
+      Swal.fire({
         icon: "warning",
         title: "Please Upload Document first",
         timer: 1500,
       });
-      setLoader(false)
-    } 
-    else {
-        const formData = new FormData();
-        formData.append("e_form", selectedFile);
-        formData.append("created_by" , "0")
-        var requestOptions = {
-          method: "PATCH", 
-          body: formData,
-          redirect: "follow",
-          headers: { Authentication: `Token ${user_token}` },
 
-        };
-      
-        fetch(
-          `${process.env.REACT_APP_API_URL}/api/empanelment-form/upload/${applicaintId}`,
-          requestOptions
-        )
-        .then(result => {
-            console.log(result)
-            if (result.status === 200 || result.status === 201) {
-              Swal.fire({
-                icon: "success",
-                title: "Form Uploaded Successfully",
-                timer: 1500,
-              });
-              setLoader(false)
-            } else {
-              Swal.fire({
-                icon: "warning",
-                title: "Something went wrong",
-                buttons: false,
-                timer: 3000,
-              });
-              setLoader(false)
-            }
-          
-          })
-          .catch((error)=>{
-            Swal.fire({icon: "warning",
-            title:"Server is not responding", timer:1500},);
-            setLoader(false)
-          })
-        }
+      setLoader(false);
+    } else {
+      const formData = new FormData();
+      formData.append("e_form", selectedFile);
+      formData.append("created_by", "0");
+      var requestOptions = {
+        method: "PATCH",
+        body: formData,
+        redirect: "follow",
+        headers: { Authentication: `Token ${user_token}` },
+      };
+
+      fetch(
+        `${process.env.REACT_APP_API_URL}/api/empanelment-form/upload/${applicaintId}`,
+        requestOptions
+      )
+        .then((result) => {
+          console.log(result);
+          if (result.status === 200 || result.status === 201) {
+            Swal.fire({
+              icon: "success",
+              title: "Form Uploaded Successfully",
+              timer: 1500,
+            });
+            setLoader(false);
+          } else {
+            Swal.fire({
+              icon: "warning",
+              title: "Something went wrong",
+              buttons: false,
+              timer: 3000,
+            });
+            setLoader(false);
+          }
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "warning",
+            title: "Something went wrong",
+            timer: 1500,
+          });
+          setLoader(false);
+        });
+    }
   };
   return (
     <div className="d-flex flex-lg-row flex-column  justify-content-center align-items-center">
@@ -100,9 +100,10 @@ const UploadSignedDoc = () => {
         <button
           type="submit"
           className="btn btn-success d-flex justify-content-center align-items-center"
-          onClick={(e)=>handleUploadAgreement(e)}
+          onClick={(e) => handleUploadAgreement(e)}
         >
-          Upload <FaFileUpload className="mx-1" /> &nbsp; {loader ? <Spinner size="sm"></Spinner> : ""}
+          Upload <FaFileUpload className="mx-1" /> &nbsp;{" "}
+          {loader ? <Spinner size="sm"></Spinner> : ""}
         </button>
       </div>
     </div>

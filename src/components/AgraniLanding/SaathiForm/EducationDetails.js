@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import Select from "react-select";
 import Swal from "sweetalert2";
@@ -15,12 +15,11 @@ const EducationDetails = () => {
   var Api_Url = process.env.REACT_APP_API_URL;
   const MasterDropDown = dropdownData?.data?.results[0];
 
-  const [Qualification, setQualification] = useState([]);
+  const [Qualification, setQualification] = useState("");
   function handleQualification(Qualification) {
     setQualification(Qualification);
     SetChangeEvent(Qualification);
   }
-
   const QualificationListData = [
     {
       label: "Document",
@@ -36,6 +35,8 @@ const EducationDetails = () => {
   const {
     register,
     handleSubmit,
+    control,
+    reset,
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
@@ -49,13 +50,15 @@ const EducationDetails = () => {
 
     localStorage.setItem("userDetail", JSON.stringify(data));
     var userId = localStorage.getItem("user-info-id");
-    console.log(userId);
 
     var formdata = new FormData();
-    formdata.append("highest_qualification", Qualification);
+    formdata.append(
+      "highest_qualification",
+      Qualification || userDetails?.education_details?.highest_qualification
+    );
     formdata.append("year_of_passing", data.year_of_passing);
 
-    for (let b = 0; b < data.degree_certificate.length; b++) {
+    for (let b = 0; b < data?.degree_certificate?.length; b++) {
       formdata.append("degree_certificate", data.degree_certificate[b]);
     }
     formdata.append("ui_section_id", "3");
@@ -63,9 +66,9 @@ const EducationDetails = () => {
     formdata.append("created_by", "0");
     formdata.append("created_by_name", "Self");
 
-    for (var pair of formdata.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
+    // for (var pair of formdata.entries()) {
+    //   console.log(pair[0] + ", " + pair[1]);
+    // }
 
     var requestOptions = {
       method: "POST",
@@ -136,25 +139,41 @@ const EducationDetails = () => {
                         Select Highest Qualification{" "}
                         <small style={{ color: "#ff0000" }}>*</small>
                       </label>
-                      <Select
-                        required
-                        {...register("highest_qualification")}
-                        value={
-                          Qualification === undefined
-                            ? Qualification
-                            : Qualification.label
-                        }
-                        onChange={(Qualification) => {
-                          handleQualification(Qualification.label);
-                          console.log(Qualification);
+
+                      <Controller
+                        name="highest_qualification"
+                        control={control}
+                        rules={{
+                          required:
+                            !Qualification &&
+                            !userDetails?.education_details
+                              ?.highest_qualification &&
+                            `Select highest qualification `,
                         }}
-                        options={QualificationListData}
-                        placeholder={
-                          userDetails?.education_details
-                            ?.highest_qualification || "Select Qualification"
-                        }
-                        classNamePrefix=""
+                        render={({ field }) => (
+                          <Select
+                            {...field}
+                            value={QualificationListData[0]?.options?.find(
+                              (option) => option.label === Qualification
+                            )}
+                            onChange={(selectedOption) => {
+                              handleQualification(selectedOption.label);
+                              field.onChange(selectedOption.label);
+                            }}
+                            options={QualificationListData}
+                            placeholder={
+                              userDetails?.education_details
+                                ?.highest_qualification ||
+                              "Select Qualification"
+                            }
+                          />
+                        )}
                       />
+                      {errors.highest_qualification && (
+                        <small style={{ color: "red" }}>
+                          {errors.highest_qualification.message}
+                        </small>
+                      )}
                     </div>
                   </div>
 
